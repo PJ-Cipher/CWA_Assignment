@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-white dark:bg-gray-900`}
       >
         <ThemeProvider>
           {/* Skip to content link for accessibility */}
@@ -38,7 +38,7 @@ export default function RootLayout({
           </a>
           
           <Header />
-          <main id="main-content" className="flex-1 bg-gray-50 dark:bg-gray-900">
+          <main id="main-content" className="flex-1 bg-white dark:bg-gray-900">
             {children}
           </main>
           <Footer />
