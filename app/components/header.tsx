@@ -47,16 +47,16 @@ export default function Header() {
                 Home
               </Link>
               <Link 
+                href="/components" 
+                className="text-gray-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-2 text-lg font-bold"
+              >
+                Tabs
+              </Link>
+              <Link 
                 href="/about" 
                 className="text-gray-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-2 text-lg font-bold"
               >
                 About
-              </Link>
-              <Link 
-                href="/components" 
-                className="text-gray-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-2 text-lg font-bold"
-              >
-                Components
               </Link>
             </nav>
 
@@ -65,14 +65,14 @@ export default function Header() {
               
               {/* Hamburger Menu Button */}
               <button
-                className="p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform hover:scale-105"
                 onClick={toggleMenu}
                 onKeyDown={handleKeyDown}
                 aria-label="Toggle navigation menu"
                 aria-expanded={isMenuOpen}
                 aria-controls="mobile-menu"
               >
-                <div className="w-7 h-7 flex flex-col justify-center items-center">
+                <div className="w-7 h-7 flex flex-col justify-center items-center relative">
                   {/* Enhanced CSS Transform Hamburger Icon */}
                   <span 
                     className={`block w-6 h-0.5 bg-gray-900 dark:bg-white transition-all duration-300 ease-in-out transform origin-center ${
@@ -80,6 +80,10 @@ export default function Header() {
                         ? 'rotate-45 translate-y-0.5 scale-x-110' 
                         : '-translate-y-1.5 scale-x-100'
                     }`}
+                    style={{
+                      transformOrigin: 'center',
+                      willChange: 'transform'
+                    }}
                   ></span>
                   <span 
                     className={`block w-6 h-0.5 bg-gray-900 dark:bg-white transition-all duration-300 ease-in-out transform origin-center ${
@@ -87,6 +91,10 @@ export default function Header() {
                         ? 'opacity-0 scale-x-0 rotate-180' 
                         : 'opacity-100 scale-x-100 rotate-0'
                     }`}
+                    style={{
+                      transformOrigin: 'center',
+                      willChange: 'transform, opacity'
+                    }}
                   ></span>
                   <span 
                     className={`block w-6 h-0.5 bg-gray-900 dark:bg-white transition-all duration-300 ease-in-out transform origin-center ${
@@ -94,6 +102,10 @@ export default function Header() {
                         ? '-rotate-45 -translate-y-0.5 scale-x-110' 
                         : 'translate-y-1.5 scale-x-100'
                     }`}
+                    style={{
+                      transformOrigin: 'center',
+                      willChange: 'transform'
+                    }}
                   ></span>
                 </div>
               </button>
@@ -104,11 +116,15 @@ export default function Header() {
         {/* Hamburger Navigation Menu */}
         <div 
           id="mobile-menu"
-          className={`transition-all duration-500 ease-in-out overflow-hidden ${
+          className={`transition-all duration-500 ease-in-out overflow-hidden transform ${
             isMenuOpen 
-              ? 'max-h-96 opacity-100 translate-y-0' 
-              : 'max-h-0 opacity-0 -translate-y-4'
+              ? 'max-h-96 opacity-100 translate-y-0 scale-y-100' 
+              : 'max-h-0 opacity-0 -translate-y-4 scale-y-0'
           }`}
+          style={{
+            transformOrigin: 'top',
+            willChange: 'transform, opacity, max-height'
+          }}
           aria-hidden={!isMenuOpen}
         >
           <nav className="py-6 space-y-4 border-t border-gray-700 mt-4" role="navigation" aria-label="Hamburger navigation">
