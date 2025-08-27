@@ -29,20 +29,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-gray-900 dark:bg-gray-900`}
       >
         <ThemeProvider>
-          {/* Skip to content link for accessibility */}
-          <a href="#main-content" className="skip-link">
-            Skip to main content
-          </a>
-          
-          <Header />
-          <main id="main-content" className="flex-1">
-            {children}
-          </main>
-          <Footer />
-          <CookieConsent />
+          <div className="flex flex-col min-h-screen">
+            {/* Skip to content link for accessibility */}
+            <a href="#main-content" className="skip-link">
+              Skip to main content
+            </a>
+            
+            <Header />
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
+            <Footer />
+            <CookieConsent />
+          </div>
         </ThemeProvider>
       </body>
     </html>
