@@ -144,7 +144,7 @@ export default function Components() {
                 <select 
                   value={componentType}
                   onChange={(e) => setComponentType(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border"
                   style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', color: 'var(--foreground)' }}
                 >
                   <option value="Tabs">Tabs</option>
@@ -160,7 +160,7 @@ export default function Components() {
                   type="text"
                   value={componentTitle}
                   onChange={(e) => setComponentTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border"
                   style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', color: 'var(--foreground)' }}
                   placeholder="Enter component title"
                 />
@@ -207,7 +207,7 @@ export default function Components() {
                         type="text"
                         value={tab.title}
                         onChange={(e) => updateTab(tab.id, 'title', e.target.value)}
-                        className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+                        className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border"
                         style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--card-foreground)' }}
                       />
                     </div>
@@ -218,7 +218,7 @@ export default function Components() {
                         value={tab.content}
                         onChange={(e) => updateTab(tab.id, 'content', e.target.value)}
                         rows={3}
-                        className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+                        className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border"
                         style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--card-foreground)' }}
                       />
                     </div>
@@ -239,7 +239,7 @@ export default function Components() {
                   type="color"
                   value={primaryColor}
                   onChange={(e) => setPrimaryColor(e.target.value)}
-                  className="w-full h-10 rounded-md cursor-pointer"
+                  className="w-full h-10 rounded-md cursor-pointer border"
                   style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}
                 />
               </div>
@@ -250,7 +250,7 @@ export default function Components() {
                   type="color"
                   value={secondaryColor}
                   onChange={(e) => setSecondaryColor(e.target.value)}
-                  className="w-full h-10 rounded-md cursor-pointer"
+                  className="w-full h-10 rounded-md cursor-pointer border"
                   style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}
                 />
               </div>
@@ -261,7 +261,7 @@ export default function Components() {
                   type="color"
                   value={backgroundColor}
                   onChange={(e) => setBackgroundColor(e.target.value)}
-                  className="w-full h-10 rounded-md cursor-pointer"
+                  className="w-full h-10 rounded-md cursor-pointer border"
                   style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}
                 />
               </div>

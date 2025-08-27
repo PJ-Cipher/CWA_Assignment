@@ -23,7 +23,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-lg relative border-b border-gray-200 dark:border-gray-700" role="banner">
+    <header className="bg-black text-white shadow-lg relative border-b border-gray-700" role="banner">
       <div className="container mx-auto px-4 py-4">
         {/* Top Section - Student Number */}
         <div className="flex items-center justify-between mb-6">

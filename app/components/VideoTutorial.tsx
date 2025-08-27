@@ -20,7 +20,7 @@ export default function VideoTutorial({
     return (
       <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
-          🎥 {videoTitle}
+          {videoTitle}
         </h2>
         
         <div className="space-y-6">
@@ -83,7 +83,7 @@ export default function VideoTutorial({
   return (
     <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
       <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
-        🎥 {videoTitle}
+        {videoTitle}
       </h2>
       
       <div className="space-y-6">

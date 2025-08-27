@@ -22,31 +22,31 @@ export default function Home() {
               <ul className="space-y-2" style={{ color: 'var(--muted-foreground)' }}>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Carousel & Tabs
+                  Interactive Tabs Component
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Accordion & Modal/Popup
+                  HTML5 Code Generator
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Dropdown & Tooltip
+                  Custom Color Configuration
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Progress Bar & Range Slider
+                  Export to HTML/JS
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Date Picker & Alerts
+                  MOODLE LMS Integration
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Lightbox & Canvas
+                  Responsive Design
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  CSS Animations & Mermaid
+                  Dark/Light Theme Support
                 </li>
               </ul>
             </div>
@@ -90,7 +90,7 @@ export default function Home() {
                 href="/components" 
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
               >
-                View Components
+                View Tabs
               </Link>
               <Link 
                 href="/about" 
