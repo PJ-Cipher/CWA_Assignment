@@ -3,15 +3,15 @@ export default function About() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">About This Project</h1>
-          <p className="text-xl text-gray-600">
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">About This Project</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300">
             LTU MOODLE LMS Components Application
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Project Overview</h2>
-          <div className="space-y-4 text-gray-600">
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mb-8 border border-gray-200 dark:border-gray-700">
+          <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Project Overview</h2>
+          <div className="space-y-4 text-gray-600 dark:text-gray-300">
             <p>
               This web application is designed to create and export interactive HTML5 components 
               that can be seamlessly deployed on MOODLE Learning Management System (LMS). 
@@ -28,9 +28,9 @@ export default function About() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Technical Features</h3>
-            <ul className="space-y-2 text-gray-600">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Technical Features</h3>
+            <ul className="space-y-2 text-gray-600 dark:text-gray-300">
               <li>• Next.js 15 with App Router</li>
               <li>• TypeScript for type safety</li>
               <li>• Tailwind CSS for styling</li>
@@ -40,9 +40,9 @@ export default function About() {
             </ul>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">LMS Compatibility</h3>
-            <ul className="space-y-2 text-gray-600">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">LMS Compatibility</h3>
+            <ul className="space-y-2 text-gray-600 dark:text-gray-300">
               <li>• MOODLE LMS integration</li>
               <li>• HTML5 standards compliance</li>
               <li>• Cross-browser compatibility</li>
@@ -53,9 +53,9 @@ export default function About() {
           </div>
         </div>
 
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-blue-800 mb-3">Student Information</h3>
-          <div className="text-blue-800">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-6 rounded-lg">
+          <h3 className="text-xl font-semibold text-blue-800 dark:text-blue-200 mb-3">Student Information</h3>
+          <div className="text-blue-800 dark:text-blue-200">
             <p><strong>Student Number:</strong> [YOUR_STUDENT_NUMBER]</p>
             <p><strong>Course:</strong> CSE5006 - Web Application Development</p>
             <p><strong>Institution:</strong> La Trobe University (LTU)</p>
@@ -63,9 +63,9 @@ export default function About() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md mt-8">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">How to Use</h3>
-          <div className="space-y-3 text-gray-600">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-8 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">How to Use</h3>
+          <div className="space-y-3 text-gray-600 dark:text-gray-300">
             <p>
               1. <strong>Browse Components:</strong> Navigate through the available interactive components
             </p>

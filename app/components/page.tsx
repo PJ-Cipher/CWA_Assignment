@@ -262,14 +262,14 @@ export default function Components() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">HTML5 Components</h1>
-          <p className="text-xl text-gray-600">
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">HTML5 Components</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300">
             Browse and export components for MOODLE LMS deployment
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="border-b border-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+          <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8 px-6">
               {Object.keys(components).map((key) => (
                 <button
@@ -277,8 +277,8 @@ export default function Components() {
                   onClick={() => setActiveTab(key)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === key
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
                   {components[key as keyof typeof components].title}
@@ -289,19 +289,19 @@ export default function Components() {
 
           <div className="p-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-2">
                 {components[activeTab as keyof typeof components].title}
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 {components[activeTab as keyof typeof components].description}
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-lg font-medium text-gray-800 mb-3">HTML Code</h3>
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <pre className="text-sm text-gray-800 whitespace-pre-wrap">
+                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">HTML Code</h3>
+                <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                  <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
                     {components[activeTab as keyof typeof components].html}
                   </pre>
                 </div>
@@ -314,9 +314,9 @@ export default function Components() {
               </div>
 
               <div>
-                <h3 className="text-lg font-medium text-gray-800 mb-3">CSS Code</h3>
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <pre className="text-sm text-gray-800 whitespace-pre-wrap">
+                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">CSS Code</h3>
+                <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                  <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
                     {components[activeTab as keyof typeof components].css}
                   </pre>
                 </div>
@@ -329,9 +329,9 @@ export default function Components() {
               </div>
             </div>
 
-            <div className="mt-8 p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
-              <h3 className="text-lg font-medium text-blue-800 mb-2">Usage Instructions</h3>
-              <ol className="text-blue-800 space-y-1 text-sm">
+            <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 rounded">
+              <h3 className="text-lg font-medium text-blue-800 dark:text-blue-200 mb-2">Usage Instructions</h3>
+              <ol className="text-blue-800 dark:text-blue-200 space-y-1 text-sm">
                 <li>1. Copy the HTML code and paste it into your MOODLE page</li>
                 <li>2. Copy the CSS code and add it to your MOODLE theme or page</li>
                 <li>3. Add any required JavaScript functionality</li>
