@@ -17,7 +17,7 @@ export default function ThemeToggle() {
 
   const handleToggle = () => {
     if (!mounted) return;
-    const newTheme = isDark ? 'light' : 'dark';
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
     console.log('Toggling theme from', theme, 'to', newTheme);
     setTheme(newTheme);
   };
@@ -39,24 +39,24 @@ export default function ThemeToggle() {
       className={`
         relative inline-flex h-8 w-16 items-center rounded-full transition-colors duration-300 ease-in-out
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
-        ${isDark ? 'bg-gray-700' : 'bg-blue-600'}
+        ${theme === 'dark' ? 'bg-gray-700' : 'bg-blue-600'}
       `}
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       role="switch"
-      aria-checked={isDark}
+      aria-checked={theme === 'dark'}
     >
-      {/* Moon emoji (visible when knob is on right - light mode) */}
+      {/* Moon emoji (visible when in light mode - knob on right) */}
       <div className={`
         absolute left-1 transition-all duration-300 ease-in-out
-        ${isDark ? 'opacity-0 scale-75' : 'opacity-100 scale-100'}
+        ${theme === 'dark' ? 'opacity-0 scale-75' : 'opacity-100 scale-100'}
       `}>
         <span className="text-sm">🌙</span>
       </div>
 
-      {/* Sun emoji (visible when knob is on left - dark mode) */}
+      {/* Sun emoji (visible when in dark mode - knob on left) */}
       <div className={`
         absolute right-1 transition-all duration-300 ease-in-out
-        ${isDark ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}
+        ${theme === 'dark' ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}
       `}>
         <span className="text-sm">☀️</span>
       </div>
@@ -64,7 +64,7 @@ export default function ThemeToggle() {
       {/* Toggle knob - positioned based on theme */}
       <div className={`
         inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out
-        ${isDark ? 'translate-x-1' : 'translate-x-8'}
+        ${theme === 'dark' ? 'translate-x-1' : 'translate-x-8'}
       `} />
     </button>
   );

@@ -24,24 +24,24 @@
 }
 
 .dark {
-  --background: #ffffff;
-  --foreground: #000000;
-  --card: #ffffff;
-  --card-foreground: #000000;
-  --popover: #ffffff;
-  --popover-foreground: #000000;
+  --background: #111827;
+  --foreground: #ffffff;
+  --card: #1f2937;
+  --card-foreground: #ffffff;
+  --popover: #1f2937;
+  --popover-foreground: #ffffff;
   --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: #f8fafc;
-  --secondary-foreground: #000000;
-  --muted: #f1f5f9;
-  --muted-foreground: #374151;
-  --accent: #f1f5f9;
-  --accent-foreground: #000000;
+  --secondary: #374151;
+  --secondary-foreground: #ffffff;
+  --muted: #374151;
+  --muted-foreground: #9ca3af;
+  --accent: #374151;
+  --accent-foreground: #ffffff;
   --destructive: #7f1d1d;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
+  --border: #374151;
+  --input: #374151;
   --ring: #3b82f6;
 }
 
@@ -77,16 +77,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-}
-
-/* Force white background for both themes */
-body, .dark body {
-  background: #ffffff !important;
-  color: #000000 !important;
-}
-
-.dark * {
-  border-color: #e2e8f0 !important;
 }
 
 /* Smooth transitions for theme switching */

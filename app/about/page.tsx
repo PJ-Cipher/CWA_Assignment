@@ -2,40 +2,40 @@ import VideoTutorial from '../components/VideoTutorial';
 
 export default function About() {
   return (
-    <div className="bg-gray-900 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-white mb-4">About This Project</h1>
-            <p className="text-xl text-gray-300">
+            <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>About This Project</h1>
+            <p className="text-xl" style={{ color: 'var(--muted-foreground)' }}>
               LTU MOODLE LMS Components Application
             </p>
           </div>
 
           {/* Student Information Section - Prominently Displayed */}
-          <div className="bg-gray-800 border-l-4 border-blue-400 p-8 rounded-lg mb-8 border border-gray-700">
-            <h2 className="text-3xl font-bold text-white mb-6 text-center">
+          <div className="border-l-4 border-blue-400 p-8 rounded-lg mb-8 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+            <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: 'var(--card-foreground)' }}>
               Student Information
             </h2>
             <div className="grid md:grid-cols-2 gap-6 text-center md:text-left">
               <div className="space-y-3">
-                <div className="bg-gray-700 p-4 rounded-lg shadow-sm border border-gray-600">
-                  <p className="text-sm text-gray-300 uppercase tracking-wide">Full Name</p>
-                  <p className="text-xl font-semibold text-white">Pasan Jayarathna</p>
+                <div className="p-4 rounded-lg shadow-sm border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
+                  <p className="text-sm uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Full Name</p>
+                  <p className="text-xl font-semibold" style={{ color: 'var(--foreground)' }}>Pasan Jayarathna</p>
                 </div>
-                <div className="bg-gray-700 p-4 rounded-lg shadow-sm border border-gray-600">
-                  <p className="text-sm text-gray-300 uppercase tracking-wide">Student Number</p>
-                  <p className="text-xl font-semibold text-white">21963056</p>
+                <div className="p-4 rounded-lg shadow-sm border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
+                  <p className="text-sm uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Student Number</p>
+                  <p className="text-xl font-semibold" style={{ color: 'var(--foreground)' }}>21963056</p>
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="bg-gray-700 p-4 rounded-lg shadow-sm border border-gray-600">
-                  <p className="text-sm text-gray-300 uppercase tracking-wide">Course</p>
-                  <p className="text-xl font-semibold text-white">CSE5006 - Web Application Development</p>
+                <div className="p-4 rounded-lg shadow-sm border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
+                  <p className="text-sm uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Course</p>
+                  <p className="text-xl font-semibold" style={{ color: 'var(--foreground)' }}>CSE5006 - Web Application Development</p>
                 </div>
-                <div className="bg-gray-700 p-4 rounded-lg shadow-sm border border-gray-600">
-                  <p className="text-sm text-gray-300 uppercase tracking-wide">Institution</p>
-                  <p className="text-xl font-semibold text-white">La Trobe University (LTU)</p>
+                <div className="p-4 rounded-lg shadow-sm border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
+                  <p className="text-sm uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Institution</p>
+                  <p className="text-xl font-semibold" style={{ color: 'var(--foreground)' }}>La Trobe University (LTU)</p>
                 </div>
               </div>
             </div>
@@ -44,9 +44,9 @@ export default function About() {
           {/* Video Tutorial Section */}
           <VideoTutorial />
 
-          <div className="bg-gray-800 p-8 rounded-lg shadow-md mb-8 border border-gray-700">
-            <h2 className="text-2xl font-semibold text-white mb-6">Project Overview</h2>
-            <div className="space-y-4 text-gray-300">
+          <div className="p-8 rounded-lg shadow-md mb-8 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+            <h2 className="text-2xl font-semibold mb-6" style={{ color: 'var(--card-foreground)' }}>Project Overview</h2>
+            <div className="space-y-4" style={{ color: 'var(--muted-foreground)' }}>
               <p>
                 This web application is designed to create and export interactive HTML5 components 
                 that can be seamlessly deployed on MOODLE Learning Management System (LMS). 
@@ -63,9 +63,9 @@ export default function About() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-              <h3 className="text-xl font-semibold text-white mb-4">Technical Features</h3>
-              <ul className="space-y-2 text-gray-300">
+            <div className="p-6 rounded-lg shadow-md border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>Technical Features</h3>
+              <ul className="space-y-2" style={{ color: 'var(--muted-foreground)' }}>
                 <li>• Next.js 15 with App Router</li>
                 <li>• TypeScript for type safety</li>
                 <li>• Tailwind CSS for styling</li>
@@ -75,9 +75,9 @@ export default function About() {
               </ul>
             </div>
 
-            <div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-              <h3 className="text-xl font-semibold text-white mb-4">LMS Compatibility</h3>
-              <ul className="space-y-2 text-gray-300">
+            <div className="p-6 rounded-lg shadow-md border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>LMS Compatibility</h3>
+              <ul className="space-y-2" style={{ color: 'var(--muted-foreground)' }}>
                 <li>• MOODLE LMS integration</li>
                 <li>• HTML5 standards compliance</li>
                 <li>• Cross-browser compatibility</li>
@@ -88,9 +88,9 @@ export default function About() {
             </div>
           </div>
 
-          <div className="bg-gray-800 p-6 rounded-lg shadow-md mt-8 border border-gray-700">
-            <h3 className="text-xl font-semibold text-white mb-4">How to Use</h3>
-            <div className="space-y-3 text-gray-300">
+          <div className="p-6 rounded-lg shadow-md mt-8 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+            <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>How to Use</h3>
+            <div className="space-y-3" style={{ color: 'var(--muted-foreground)' }}>
               <p>
                 1. <strong>Browse Components:</strong> Navigate through the available interactive components
               </p>

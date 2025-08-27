@@ -2,24 +2,24 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="bg-gray-900 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Welcome Section */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-white mb-4">
+            <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
               Welcome to LTU MOODLE LMS Components
             </h1>
-            <p className="text-xl text-gray-300 mb-6">
+            <p className="text-xl mb-6" style={{ color: 'var(--muted-foreground)' }}>
               Create and deploy interactive HTML5 components for your MOODLE learning environment
             </p>
           </div>
 
           {/* Components and Features Section */}
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-              <h2 className="text-2xl font-semibold text-white mb-4">Available Components</h2>
-              <ul className="space-y-2 text-gray-300">
+            <div className="p-6 rounded-lg shadow-md border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>Available Components</h2>
+              <ul className="space-y-2" style={{ color: 'var(--muted-foreground)' }}>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
                   Carousel & Tabs
@@ -51,9 +51,9 @@ export default function Home() {
               </ul>
             </div>
 
-            <div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-              <h2 className="text-2xl font-semibold text-white mb-4">Features</h2>
-              <ul className="space-y-2 text-gray-300">
+            <div className="p-6 rounded-lg shadow-md border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>Features</h2>
+              <ul className="space-y-2" style={{ color: 'var(--muted-foreground)' }}>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
                   Next.js 15 with TypeScript
@@ -79,9 +79,9 @@ export default function Home() {
           </div>
 
           {/* Getting Started Section */}
-          <div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-            <h2 className="text-2xl font-semibold text-white mb-4">Getting Started</h2>
-            <p className="text-gray-300 mb-4">
+          <div className="p-6 rounded-lg shadow-md border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+            <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>Getting Started</h2>
+            <p className="mb-4" style={{ color: 'var(--muted-foreground)' }}>
               This application provides a comprehensive set of interactive components that can be easily deployed 
               on MOODLE LMS. Each component is designed to enhance the learning experience with modern web technologies.
             </p>
