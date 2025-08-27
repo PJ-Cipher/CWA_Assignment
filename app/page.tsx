@@ -7,7 +7,7 @@ export default function Home() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          {/* Welcome Section */}
+
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
               Welcome to LTU MOODLE LMS Components
@@ -17,7 +17,7 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Components and Features Section */}
+
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="p-6 rounded-lg shadow-md border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
               <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>Available Components</h2>
@@ -80,7 +80,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Getting Started Section */}
+
           <div className="p-6 rounded-lg shadow-md border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
             <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>Getting Started</h2>
             <p className="mb-4" style={{ color: 'var(--muted-foreground)' }}>

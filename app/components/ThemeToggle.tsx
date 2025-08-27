@@ -1,71 +1,71 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
-import { useState, useEffect } from 'react';
 
 export default function ThemeToggle() {
   const { theme, setTheme, mounted } = useTheme();
   const [isDark, setIsDark] = useState(false);
 
-  // Update local state when theme changes
   useEffect(() => {
-    if (mounted) {
-      console.log('Theme changed to:', theme);
-      setIsDark(theme === 'dark');
-    }
-  }, [theme, mounted]);
+    setIsDark(theme === 'dark');
+  }, [theme]);
 
-  const handleToggle = () => {
-    if (!mounted) return;
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    console.log('Toggling theme from', theme, 'to', newTheme);
-    setTheme(newTheme);
-  };
-
-  // Don't render until mounted to prevent hydration issues
   if (!mounted) {
     return (
-      <div className="relative inline-flex h-8 w-16 items-center rounded-full bg-gray-300 animate-pulse">
-        <div className="inline-block h-6 w-6 rounded-full bg-white shadow-lg ml-1" />
-      </div>
+      <div className="w-12 h-6 bg-gray-300 rounded-full animate-pulse"></div>
     );
   }
 
-  console.log('Current theme state:', { theme, isDark });
+  const handleToggle = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
   return (
     <button
       onClick={handleToggle}
-      className={`
-        relative inline-flex h-8 w-16 items-center rounded-full transition-colors duration-300 ease-in-out
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
-        ${theme === 'dark' ? 'bg-gray-700' : 'bg-blue-600'}
-      `}
+      className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+        theme === 'dark' ? 'bg-blue-600' : 'bg-gray-300'
+      }`}
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      role="switch"
       aria-checked={theme === 'dark'}
+      role="switch"
     >
-      {/* Moon emoji (visible when in light mode - knob on right) */}
-      <div className={`
-        absolute left-1 transition-all duration-300 ease-in-out
-        ${theme === 'dark' ? 'opacity-0 scale-75' : 'opacity-100 scale-100'}
-      `}>
-        <span className="text-sm">🌙</span>
-      </div>
-
-      {/* Sun emoji (visible when in dark mode - knob on left) */}
-      <div className={`
-        absolute right-1 transition-all duration-300 ease-in-out
-        ${theme === 'dark' ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}
-      `}>
-        <span className="text-sm">☀️</span>
-      </div>
-
-      {/* Toggle knob - positioned based on theme */}
-      <div className={`
-        inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out
-        ${theme === 'dark' ? 'translate-x-1' : 'translate-x-8'}
-      `} />
+      <span
+        className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-200 flex items-center justify-center text-xs ${
+          theme === 'dark' ? 'translate-x-6' : 'translate-x-0'
+        }`}
+        style={{ backgroundColor: 'var(--background)' }}
+      >
+        <span
+          className={`transition-all duration-200 ${
+            theme === 'dark' ? 'opacity-0 scale-0' : 'opacity-100 scale-100'
+          }`}
+        >
+          🌙
+        </span>
+      </span>
+      
+      <span
+        className={`absolute top-1 right-1 w-4 h-4 rounded-full transition-transform duration-200 flex items-center justify-center text-xs ${
+          theme === 'dark' ? 'translate-x-0' : '-translate-x-6'
+        }`}
+        style={{ backgroundColor: 'var(--background)' }}
+      >
+        <span
+          className={`transition-all duration-200 ${
+            theme === 'dark' ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+          }`}
+        >
+          ☀️
+        </span>
+      </span>
+      
+      <span
+        className={`absolute top-1 w-4 h-4 rounded-full transition-transform duration-200 ${
+          theme === 'dark' ? 'translate-x-6 bg-white' : 'translate-x-0 bg-white'
+        }`}
+      />
     </button>
   );
 }

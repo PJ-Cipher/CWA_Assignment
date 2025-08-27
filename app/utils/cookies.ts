@@ -1,6 +1,4 @@
-// Cookie utility functions
 export const cookieUtils = {
-  // Set a cookie with expiration date
   setCookie: (name: string, value: string, days: number = 365) => {
     if (typeof window === 'undefined') return;
     
@@ -9,7 +7,6 @@ export const cookieUtils = {
     document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
   },
 
-  // Get a cookie value
   getCookie: (name: string): string | null => {
     if (typeof window === 'undefined') return null;
     
@@ -23,14 +20,12 @@ export const cookieUtils = {
     return null;
   },
 
-  // Delete a cookie
   deleteCookie: (name: string) => {
     if (typeof window === 'undefined') return;
     
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
   },
 
-  // Check if cookies are enabled
   areCookiesEnabled: (): boolean => {
     if (typeof window === 'undefined') return false;
     
@@ -45,7 +40,6 @@ export const cookieUtils = {
   }
 };
 
-// Local storage utility functions (fallback when cookies are disabled)
 export const storageUtils = {
   setItem: (key: string, value: string) => {
     if (typeof window === 'undefined') return;
