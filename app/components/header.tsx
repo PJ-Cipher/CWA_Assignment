@@ -27,7 +27,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <span className="text-lg font-bold">Student: [YOUR_STUDENT_NUMBER]</span>
+            <span className="text-lg font-bold">21963056</span>
             <h1 className="text-xl font-semibold">LTU MOODLE LMS Components</h1>
           </div>
           

@@ -35,8 +35,8 @@ export default function Footer() {
           <div className="text-center md:text-left">
             <h3 className="text-lg font-semibold mb-3 text-blue-300">Student Information</h3>
             <div className="text-gray-300 text-sm space-y-1">
-              <p><strong>Name:</strong> [YOUR_NAME]</p>
-              <p><strong>Student Number:</strong> [YOUR_STUDENT_NUMBER]</p>
+              <p><strong>Name:</strong> Pasan Jayarathna</p>
+              <p><strong>Student Number:</strong> 21963056</p>
               <p><strong>Course:</strong> CSE5006</p>
               <p><strong>Institution:</strong> La Trobe University</p>
             </div>

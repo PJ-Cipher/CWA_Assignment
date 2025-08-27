@@ -13,7 +13,7 @@ export default function Home() {
           </p>
           <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-4 mb-8">
             <p className="text-blue-800 dark:text-blue-200">
-              <strong>Student Number:</strong> [YOUR_STUDENT_NUMBER] - Replace this placeholder with your actual student number
+              <strong>Student:</strong> Pasan Jayarathna (21963056)
             </p>
           </div>
         </div>

@@ -3,7 +3,8 @@
 A Next.js web application designed to create and export interactive HTML5 components for deployment on MOODLE Learning Management System (LMS).
 
 ## Student Information
-- **Student Number:** [YOUR_STUDENT_NUMBER] - Replace this placeholder with your actual student number
+- **Student Name:** Pasan Jayarathna
+- **Student Number:** 21963056
 - **Course:** CSE5006 - Web Application Development
 - **Institution:** La Trobe University (LTU)
 - **Assignment:** Assignment 1 - MOODLE LMS Components

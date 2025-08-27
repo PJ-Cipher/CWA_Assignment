@@ -20,11 +20,11 @@ export default function About() {
             <div className="space-y-3">
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                 <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Full Name</p>
-                <p className="text-xl font-semibold text-gray-800 dark:text-white">[YOUR_FULL_NAME]</p>
+                <p className="text-xl font-semibold text-gray-800 dark:text-white">Pasan Jayarathna</p>
               </div>
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                 <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Student Number</p>
-                <p className="text-xl font-semibold text-gray-800 dark:text-white">[YOUR_STUDENT_NUMBER]</p>
+                <p className="text-xl font-semibold text-gray-800 dark:text-white">21963056</p>
               </div>
             </div>
             <div className="space-y-3">
