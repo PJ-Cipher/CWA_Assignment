@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/Footer";
+import CookieConsent from "./components/CookieConsent";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 const geistSans = Geist({
@@ -31,11 +32,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <ThemeProvider>
+          {/* Skip to content link for accessibility */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
+          
           <Header />
-          <main className="flex-1 bg-gray-50 dark:bg-gray-900">
+          <main id="main-content" className="flex-1 bg-gray-50 dark:bg-gray-900">
             {children}
           </main>
           <Footer />
+          <CookieConsent />
         </ThemeProvider>
       </body>
     </html>

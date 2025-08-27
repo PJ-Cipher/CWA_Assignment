@@ -1,9 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { storageUtils } from '../utils/cookies';
 
 export default function Components() {
   const [activeTab, setActiveTab] = useState('carousel');
+
+  // Load active tab from cookies/localStorage on component mount
+  useEffect(() => {
+    const savedTab = storageUtils.getItem('activeComponentTab');
+    if (savedTab && components[savedTab as keyof typeof components]) {
+      setActiveTab(savedTab);
+    }
+  }, []);
+
+  // Save active tab to cookies/localStorage when it changes
+  const handleTabChange = (tabKey: string) => {
+    setActiveTab(tabKey);
+    storageUtils.setItem('activeComponentTab', tabKey);
+  };
 
   const components = {
     carousel: {
@@ -255,7 +270,18 @@ export default function Components() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert('Code copied to clipboard!');
+    // Show accessible feedback
+    const feedback = document.createElement('div');
+    feedback.setAttribute('role', 'status');
+    feedback.setAttribute('aria-live', 'polite');
+    feedback.className = 'sr-only';
+    feedback.textContent = 'Code copied to clipboard';
+    document.body.appendChild(feedback);
+    
+    // Remove feedback after 3 seconds
+    setTimeout(() => {
+      document.body.removeChild(feedback);
+    }, 3000);
   };
 
   return (
@@ -270,12 +296,16 @@ export default function Components() {
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
           <div className="border-b border-gray-200 dark:border-gray-700">
-            <nav className="flex space-x-8 px-6">
+            <nav className="flex space-x-8 px-6" role="tablist" aria-label="Component categories">
               {Object.keys(components).map((key) => (
                 <button
                   key={key}
-                  onClick={() => setActiveTab(key)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  onClick={() => handleTabChange(key)}
+                  role="tab"
+                  aria-selected={activeTab === key}
+                  aria-controls={`panel-${key}`}
+                  id={`tab-${key}`}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
                     activeTab === key
                       ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                       : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
@@ -288,46 +318,58 @@ export default function Components() {
           </div>
 
           <div className="p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-2">
-                {components[activeTab as keyof typeof components].title}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300">
-                {components[activeTab as keyof typeof components].description}
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">HTML Code</h3>
-                <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-                  <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-                    {components[activeTab as keyof typeof components].html}
-                  </pre>
+            {Object.keys(components).map((key) => (
+              <div
+                key={key}
+                role="tabpanel"
+                id={`panel-${key}`}
+                aria-labelledby={`tab-${key}`}
+                className={activeTab === key ? 'block' : 'hidden'}
+              >
+                <div className="mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-2">
+                    {components[key as keyof typeof components].title}
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {components[key as keyof typeof components].description}
+                  </p>
                 </div>
-                <button
-                  onClick={() => copyToClipboard(components[activeTab as keyof typeof components].html)}
-                  className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-                >
-                  Copy HTML
-                </button>
-              </div>
 
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">CSS Code</h3>
-                <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-                  <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-                    {components[activeTab as keyof typeof components].css}
-                  </pre>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">HTML Code</h3>
+                    <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                      <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap" role="textbox" aria-label="HTML code for component">
+                        {components[key as keyof typeof components].html}
+                      </pre>
+                    </div>
+                    <button
+                      onClick={() => copyToClipboard(components[key as keyof typeof components].html)}
+                      className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                      aria-label={`Copy HTML code for ${components[key as keyof typeof components].title}`}
+                    >
+                      Copy HTML
+                    </button>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">CSS Code</h3>
+                    <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                      <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap" role="textbox" aria-label="CSS code for component">
+                        {components[key as keyof typeof components].css}
+                      </pre>
+                    </div>
+                    <button
+                      onClick={() => copyToClipboard(components[key as keyof typeof components].css)}
+                      className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                      aria-label={`Copy CSS code for ${components[key as keyof typeof components].title}`}
+                    >
+                      Copy CSS
+                    </button>
+                  </div>
                 </div>
-                <button
-                  onClick={() => copyToClipboard(components[activeTab as keyof typeof components].css)}
-                  className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-                >
-                  Copy CSS
-                </button>
               </div>
-            </div>
+            ))}
 
             <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 rounded">
               <h3 className="text-lg font-medium text-blue-800 dark:text-blue-200 mb-2">Usage Instructions</h3>

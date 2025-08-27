@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { storageUtils } from '../utils/cookies';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -17,8 +18,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    // Get theme from localStorage or default to system
-    const savedTheme = localStorage.getItem('theme') as Theme;
+    // Get theme from cookies/localStorage or default to system
+    const savedTheme = storageUtils.getItem('theme') as Theme;
     if (savedTheme) {
       setTheme(savedTheme);
     }
@@ -39,8 +40,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.classList.add(theme);
     }
     
-    // Save theme preference
-    localStorage.setItem('theme', theme);
+    // Save theme preference to cookies/localStorage
+    storageUtils.setItem('theme', theme);
   }, [theme]);
 
   useEffect(() => {
