@@ -1,36 +1,139 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LTU MOODLE LMS Components Application
+
+A Next.js web application designed to create and export interactive HTML5 components for deployment on MOODLE Learning Management System (LMS).
+
+## Student Information
+- **Student Name:** Pasan Jayarathna
+- **Student Number:** 21963056
+- **Course:** CSE5006 - Web Application Development
+- **Institution:** La Trobe University (LTU)
+- **Assignment:** Assignment 1 - MOODLE LMS Components
+
+## Project Overview
+
+This application provides a comprehensive set of interactive HTML5 components that can be easily deployed on MOODLE LMS. The components are designed to enhance the learning experience with modern web technologies.
+
+## Available Components
+
+The application includes the following HTML5 components:
+
+- **Carousel** - Interactive image carousel with navigation controls
+- **Tabs** - Content organization with tabbed interface
+- **Accordion** - Collapsible content sections
+- **Modal/Popup** - Overlay dialog boxes for user interaction
+- **Dropdown** - Expandable menu components
+- **Tooltip** - Hover information displays
+- **Progress Bar** - Visual progress indicators
+- **Range Slider** - Interactive input sliders
+- **Date Picker** - Date selection components
+- **Alerts** - User notification components
+- **Lightbox** - Image gallery overlays
+- **Canvas** - HTML5 canvas elements
+- **CSS Animations** - Rotating and animated elements
+- **Mermaid** - Diagram and flowchart support
+
+## Technology Stack
+
+- **Frontend Framework:** Next.js 15 with App Router
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Build Tool:** Turbopack
+- **Package Manager:** npm
+
+## Features
+
+- Modern, responsive design
+- Component library with code examples
+- Copy-to-clipboard functionality
+- Export-ready HTML and CSS code
+- MOODLE LMS compatibility
+- Cross-browser support
+- Mobile-responsive components
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd assignment1
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Learn More
+### Building for Production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Browse Components:** Navigate through the available interactive components
+2. **Customize:** Modify component properties and styling as needed
+3. **Preview:** Test components in real-time before deployment
+4. **Export:** Generate HTML and JavaScript code for MOODLE LMS
+5. **Deploy:** Copy the generated code into your MOODLE course
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+assignment1/
+├── app/                    # Next.js app directory
+│   ├── about/             # About page
+│   ├── components/        # Components showcase page
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout component
+│   └── page.tsx           # Home page
+├── public/                 # Static assets
+├── package.json           # Dependencies and scripts
+├── tsconfig.json          # TypeScript configuration
+└── README.md              # Project documentation
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+The application can be deployed to various platforms:
+
+- **Vercel:** Recommended for Next.js applications
+- **Netlify:** Alternative deployment option
+- **Self-hosted:** Any Node.js hosting environment
+
+## MOODLE LMS Integration
+
+To use components in MOODLE:
+
+1. Copy the HTML code from the component page
+2. Paste it into your MOODLE page using HTML source editor
+3. Add the CSS code to your MOODLE theme or page
+4. Include any required JavaScript functionality
+5. Test the component in your MOODLE environment
+
+## Contributing
+
+This is an assignment project for CSE5006. For educational purposes only.
+
+## License
+
+This project is created for educational purposes as part of the CSE5006 course at La Trobe University.
+
+## Contact
+
+For questions about this project, please refer to your course instructor or teaching materials.
