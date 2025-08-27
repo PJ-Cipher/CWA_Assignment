@@ -56,97 +56,50 @@ export default function Components() {
   };
 
   const generateCode = () => {
-    const tabElements = tabs.map((tab, index) => `
-      <div class="tab-content" id="tab${index + 1}" style="display: ${index === 0 ? 'block' : 'none'}; padding: 20px; background-color: ${backgroundColor}; color: #333;">
-        <h3 style="color: ${primaryColor}; margin-bottom: 15px;">${tab.title}</h3>
-        <p style="line-height: 1.6;">${tab.content}</p>
-      </div>
-    `).join('');
-
-    const tabButtons = tabs.map((tab, index) => `
-      <button class="tab-button" onclick="showTab(${index + 1})" style="
-        padding: 12px 24px; 
-        margin-right: 5px; 
-        border: none; 
-        background-color: ${index === 0 ? primaryColor : secondaryColor}; 
-        color: white; 
-        cursor: pointer; 
-        border-radius: 5px 5px 0 0;
-        font-weight: ${index === 0 ? 'bold' : 'normal'};
-      ">${tab.title}</button>
-    `).join('');
-
-    const htmlCode = `<!DOCTYPE html>
+    // Create the complete HTML document with only inline CSS
+    const completeCode = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${componentTitle}</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            background-color: ${backgroundColor}; 
-        }
-        .tab-container { 
-            max-width: 800px; 
-            margin: 0 auto; 
-            background: white; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-        }
-        .tab-buttons { 
-            display: flex; 
-            border-bottom: 2px solid ${primaryColor}; 
-        }
-        .tab-button:hover { 
-            background-color: ${primaryColor} !important; 
-            opacity: 0.8; 
-        }
-        .tab-content { 
-            border-radius: 0 0 8px 8px; 
-        }
-        @media (max-width: 600px) {
-            .tab-buttons { 
-                flex-direction: column; 
-            }
-            .tab-button { 
-                margin-right: 0 !important; 
-                margin-bottom: 2px; 
-                border-radius: 5px !important; 
-            }
-        }
-    </style>
 </head>
 <body>
-    <div class="tab-container">
-        <div class="tab-buttons">
-            ${tabButtons}
+    <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; background-color: ${backgroundColor};">
+        <h2 style="color: ${primaryColor}; margin-bottom: 20px; text-align: center; font-size: 24px;">${componentTitle}</h2>
+        <div style="border-bottom: 2px solid ${secondaryColor}; margin-bottom: 20px;">
+            ${tabs.map((tab, index) => 
+              `<button onclick="openTab(event, '${tab.id}')" style="background-color: ${index === 0 ? primaryColor : 'transparent'}; color: ${index === 0 ? 'white' : primaryColor}; border: none; padding: 12px 24px; cursor: pointer; font-size: 16px; margin-right: 4px; border-radius: 4px 4px 0 0; transition: all 0.3s ease;">${tab.title}</button>`
+            ).join('')}
         </div>
-        ${tabElements}
+        ${tabs.map((tab, index) => 
+          `<div id="${tab.id}" style="display: ${index === 0 ? 'block' : 'none'}; padding: 20px; line-height: 1.6; color: #333;">
+            <p style="margin: 0;">${tab.content}</p>
+          </div>`
+        ).join('')}
     </div>
 
     <script>
-        function showTab(tabNumber) {
-            const contents = document.querySelectorAll('.tab-content');
-            const buttons = document.querySelectorAll('.tab-button');
-            
-            contents.forEach(content => content.style.display = 'none');
-            buttons.forEach(button => {
-                button.style.backgroundColor = '${secondaryColor}';
-                button.style.fontWeight = 'normal';
-            });
-            
-            document.getElementById('tab' + tabNumber).style.display = 'block';
-            buttons[tabNumber - 1].style.backgroundColor = '${primaryColor}';
-            buttons[tabNumber - 1].style.fontWeight = 'bold';
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.querySelectorAll('[id^="tab"]');
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.querySelectorAll('button[onclick^="openTab"]');
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "transparent";
+                tablinks[i].style.color = "${primaryColor}";
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.style.backgroundColor = "${primaryColor}";
+            evt.currentTarget.style.color = "white";
         }
     </script>
 </body>
 </html>`;
-
-    setGeneratedCode(htmlCode);
+    
+    setGeneratedCode(completeCode);
     setShowGeneratedCode(true);
   };
 
@@ -175,13 +128,13 @@ export default function Components() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-
+          {/* Page Title */}
           <div className="rounded-lg p-6 mb-6 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
             <h1 className="text-3xl font-bold" style={{ color: 'var(--card-foreground)' }}>HTML5 Code Generator</h1>
             <p className="mt-2" style={{ color: 'var(--muted-foreground)' }}>Create interactive HTML5 components for MOODLE LMS deployment</p>
           </div>
 
-
+          {/* Component Configuration Section */}
           <div className="rounded-lg p-6 mb-6 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
             <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--card-foreground)' }}>Component Configuration</h2>
             
@@ -215,7 +168,7 @@ export default function Components() {
             </div>
           </div>
 
-
+          {/* Custom Tabs Section */}
           <div className="rounded-lg p-6 mb-6 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold" style={{ color: 'var(--card-foreground)' }}>Custom Tabs</h2>
@@ -275,7 +228,7 @@ export default function Components() {
             </div>
           </div>
 
-
+          {/* Color Configuration Section */}
           <div className="rounded-lg p-6 mb-6 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
             <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>Color Configuration</h2>
             
@@ -315,7 +268,7 @@ export default function Components() {
             </div>
           </div>
 
-
+          {/* Generate Button */}
           <div className="text-center mb-6">
             <button
               onClick={generateCode}
@@ -325,7 +278,7 @@ export default function Components() {
             </button>
           </div>
 
-
+          {/* Generated Code Section */}
           {showGeneratedCode && (
             <div className="rounded-lg p-6 mb-6 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
               <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--card-foreground)' }}>Generated Code</h2>
