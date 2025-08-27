@@ -1,3 +1,5 @@
+import VideoTutorial from '../components/VideoTutorial';
+
 export default function About() {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -8,6 +10,38 @@ export default function About() {
             LTU MOODLE LMS Components Application
           </p>
         </div>
+
+        {/* Student Information Section - Prominently Displayed */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-l-4 border-blue-400 p-8 rounded-lg mb-8">
+          <h2 className="text-3xl font-bold text-blue-800 dark:text-blue-200 mb-6 text-center">
+            Student Information
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6 text-center md:text-left">
+            <div className="space-y-3">
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Full Name</p>
+                <p className="text-xl font-semibold text-gray-800 dark:text-white">[YOUR_FULL_NAME]</p>
+              </div>
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Student Number</p>
+                <p className="text-xl font-semibold text-gray-800 dark:text-white">[YOUR_STUDENT_NUMBER]</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Course</p>
+                <p className="text-xl font-semibold text-gray-800 dark:text-white">CSE5006 - Web Application Development</p>
+              </div>
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Institution</p>
+                <p className="text-xl font-semibold text-gray-800 dark:text-white">La Trobe University (LTU)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Video Tutorial Section */}
+        <VideoTutorial />
 
         <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mb-8 border border-gray-200 dark:border-gray-700">
           <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Project Overview</h2>
@@ -50,16 +84,6 @@ export default function About() {
               <li>• Accessibility features</li>
               <li>• Performance optimized</li>
             </ul>
-          </div>
-        </div>
-
-        <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-blue-800 dark:text-blue-200 mb-3">Student Information</h3>
-          <div className="text-blue-800 dark:text-blue-200">
-            <p><strong>Student Number:</strong> [YOUR_STUDENT_NUMBER]</p>
-            <p><strong>Course:</strong> CSE5006 - Web Application Development</p>
-            <p><strong>Institution:</strong> La Trobe University (LTU)</p>
-            <p><strong>Assignment:</strong> Assignment 1 - MOODLE LMS Components</p>
           </div>
         </div>
 
