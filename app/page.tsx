@@ -5,23 +5,23 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
             Welcome to LTU MOODLE LMS Components
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
+          <p className="text-xl text-gray-600 mb-6">
             Create and deploy interactive HTML5 components for your MOODLE learning environment
           </p>
-          <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-4 mb-8">
-            <p className="text-blue-800 dark:text-blue-200">
+          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+            <p className="text-blue-800">
               <strong>Student:</strong> Pasan Jayarathna (21963056)
             </p>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Available Components</h2>
-            <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Available Components</h2>
+            <ul className="space-y-2 text-gray-600">
               <li className="flex items-center">
                 <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
                 Carousel & Tabs
@@ -53,9 +53,9 @@ export default function Home() {
             </ul>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Features</h2>
-            <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Features</h2>
+            <ul className="space-y-2 text-gray-600">
               <li className="flex items-center">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
                 Next.js 15 with TypeScript
@@ -80,9 +80,9 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Getting Started</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Getting Started</h2>
+          <p className="text-gray-600 mb-4">
             This application provides a comprehensive set of interactive components that can be easily deployed 
             on MOODLE LMS. Each component is designed to enhance the learning experience with modern web technologies.
           </p>

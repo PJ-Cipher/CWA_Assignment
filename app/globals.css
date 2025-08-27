@@ -2,19 +2,19 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
   --card: #ffffff;
-  --card-foreground: #171717;
+  --card-foreground: #000000;
   --popover: #ffffff;
-  --popover-foreground: #171717;
+  --popover-foreground: #000000;
   --primary: #2563eb;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
+  --secondary: #f8fafc;
+  --secondary-foreground: #000000;
   --muted: #f1f5f9;
-  --muted-foreground: #64748b;
+  --muted-foreground: #374151;
   --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
+  --accent-foreground: #000000;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #e2e8f0;
@@ -24,24 +24,24 @@
 }
 
 .dark {
-  --background: #0f172a;
-  --foreground: #f8fafc;
-  --card: #1e293b;
-  --card-foreground: #f8fafc;
-  --popover: #1e293b;
-  --popover-foreground: #f8fafc;
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
   --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: #334155;
-  --secondary-foreground: #f1f5f9;
-  --muted: #334155;
-  --muted-foreground: #94a3b8;
-  --accent: #334155;
-  --accent-foreground: #f1f5f9;
+  --secondary: #f8fafc;
+  --secondary-foreground: #000000;
+  --muted: #f1f5f9;
+  --muted-foreground: #374151;
+  --accent: #f1f5f9;
+  --accent-foreground: #000000;
   --destructive: #7f1d1d;
   --destructive-foreground: #ffffff;
-  --border: #334155;
-  --input: #334155;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
   --ring: #3b82f6;
 }
 
@@ -77,6 +77,16 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Force white background for both themes */
+body, .dark body {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.dark * {
+  border-color: #e2e8f0 !important;
 }
 
 /* Smooth transitions for theme switching */
@@ -132,8 +142,8 @@ body {
   }
   
   .dark {
-    --border: #ffffff;
-    --ring: #ffffff;
+    --border: #000000;
+    --ring: #000000;
   }
 }
 

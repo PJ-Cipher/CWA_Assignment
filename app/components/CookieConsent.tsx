@@ -27,7 +27,7 @@ export default function CookieConsent() {
 
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg z-50 p-4"
+      className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 p-4"
       role="dialog"
       aria-labelledby="cookie-title"
       aria-describedby="cookie-description"
@@ -37,13 +37,13 @@ export default function CookieConsent() {
           <div className="flex-1">
             <h2 
               id="cookie-title" 
-              className="text-lg font-semibold text-gray-800 dark:text-white mb-2"
+              className="text-lg font-semibold text-gray-800 mb-2"
             >
               🍪 Cookie Consent
             </h2>
             <p 
               id="cookie-description" 
-              className="text-gray-600 dark:text-gray-300 text-sm"
+              className="text-gray-600 text-sm"
             >
               We use cookies to remember your preferences and improve your experience. 
               This includes remembering which menu tabs you were viewing and your theme preference.
@@ -52,14 +52,14 @@ export default function CookieConsent() {
           <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={declineCookies}
-              className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Decline cookies"
             >
               Decline
             </button>
             <button
               onClick={acceptCookies}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Accept cookies"
             >
               Accept All Cookies

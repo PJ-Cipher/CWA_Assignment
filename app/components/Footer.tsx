@@ -17,7 +17,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-white dark:bg-gray-800 text-black dark:text-white border-t border-gray-200 dark:border-gray-600">
+    <footer className="bg-white text-gray-800 border-t border-gray-200">
       <div className="container mx-auto px-4 py-6">
         {/* Simple Copyright Line */}
         <div className="text-center">
