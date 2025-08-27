@@ -3,20 +3,22 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { storageUtils } from '../utils/cookies';
 
-type Theme = 'light' | 'dark';
+type Theme = 'light' | 'dark' | 'system';
 
 interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  resolvedTheme: 'light' | 'dark';
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>('system');
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    // Get theme from cookies/localStorage or default to light
+    // Get theme from cookies/localStorage or default to system
     const savedTheme = storageUtils.getItem('theme') as Theme;
     if (savedTheme) {
       setTheme(savedTheme);
@@ -29,15 +31,39 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Remove existing theme classes
     root.classList.remove('light', 'dark');
     
-    // Apply the selected theme
-    root.classList.add(theme);
+    if (theme === 'system') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      setResolvedTheme(systemTheme);
+      root.classList.add(systemTheme);
+    } else {
+      setResolvedTheme(theme);
+      root.classList.add(theme);
+    }
     
     // Save theme preference to cookies/localStorage
     storageUtils.setItem('theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = () => {
+      if (theme === 'system') {
+        const newTheme = mediaQuery.matches ? 'dark' : 'light';
+        setResolvedTheme(newTheme);
+        const root = window.document.documentElement;
+        root.classList.remove('light', 'dark');
+        root.classList.add(newTheme);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme]);
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
       {children}
     </ThemeContext.Provider>
   );

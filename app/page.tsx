@@ -11,11 +11,6 @@ export default function Home() {
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
             Create and deploy interactive HTML5 components for your MOODLE learning environment
           </p>
-          <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-4 mb-8">
-            <p className="text-blue-800 dark:text-blue-200">
-              <strong>Student:</strong> Pasan Jayarathna (21963056)
-            </p>
-          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
