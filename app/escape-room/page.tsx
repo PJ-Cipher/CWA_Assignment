@@ -80,7 +80,6 @@ export default function EscapeRoomBuilder() {
     timeFailed: false
   });
 
-  // Room form state
   const [roomFormData, setRoomFormData] = useState<EscapeRoom>({
     id: '',
     name: '',
@@ -89,7 +88,6 @@ export default function EscapeRoomBuilder() {
     timerMinutes: 0
   });
 
-  // Question form state
   const [questionFormData, setQuestionFormData] = useState<Question>({
     id: '',
     name: '',
@@ -100,7 +98,6 @@ export default function EscapeRoomBuilder() {
     codeExample: ''
   });
 
-  // Load from cookies on mount
   useEffect(() => {
     const savedData = cookieUtils.getCookie(COOKIE_NAME);
     if (savedData) {
@@ -113,7 +110,6 @@ export default function EscapeRoomBuilder() {
     }
   }, []);
 
-  // Save to cookies whenever escapeRooms changes
   useEffect(() => {
     if (escapeRooms.length > 0) {
       const encoded = encodeURIComponent(JSON.stringify(escapeRooms));
@@ -298,7 +294,6 @@ export default function EscapeRoomBuilder() {
     }
   };
 
-  // Timer effect for preview mode
   useEffect(() => {
     let timerInterval: NodeJS.Timeout;
     
@@ -319,7 +314,6 @@ export default function EscapeRoomBuilder() {
     };
   }, [preview.isActive, preview.completed, preview.timeFailed, preview.timeRemaining]);
 
-  // Preview Mode Functions
   const startPreview = (roomId: string) => {
     const room = escapeRooms.find(r => r.id === roomId);
     if (!room || room.questions.length === 0) {
@@ -335,7 +329,7 @@ export default function EscapeRoomBuilder() {
       showError: false,
       attempts: 0,
       completed: false,
-      timeRemaining: room.timerMinutes * 60, // Convert minutes to seconds
+      timeRemaining: room.timerMinutes * 60,
       timeFailed: false
     });
   };
@@ -391,7 +385,6 @@ export default function EscapeRoomBuilder() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Preview Mode Render
   if (preview.isActive && previewRoomId && !preview.completed) {
     const room = escapeRooms.find(r => r.id === previewRoomId);
     if (!room) return null;
@@ -497,7 +490,7 @@ export default function EscapeRoomBuilder() {
                   autoFocus
                 />
                 {preview.showError && (
-                  <p className="text-red-500 mb-4">❌ Incorrect answer. Try again!</p>
+                  <p className="text-red-500 mb-4">Incorrect answer. Try again!</p>
                 )}
 
                 <div className="flex gap-4">
@@ -544,7 +537,6 @@ export default function EscapeRoomBuilder() {
     );
   }
 
-  // Time Failed Screen
   if (preview.timeFailed && previewRoomId) {
     const room = escapeRooms.find(r => r.id === previewRoomId);
     if (!room) return null;
@@ -627,7 +619,6 @@ export default function EscapeRoomBuilder() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4 flex items-center justify-center gap-3" style={{ color: 'var(--foreground)' }}>
               <BuildingIcon className="w-10 h-10" /> Escape Room Builder
@@ -637,7 +628,6 @@ export default function EscapeRoomBuilder() {
             </p>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 mb-8 justify-center">
             <button
               onClick={handleAddRoom}
@@ -675,7 +665,6 @@ export default function EscapeRoomBuilder() {
             </button>
           </div>
 
-          {/* Room Form */}
           {isAddingNewRoom && (
             <div className="border-2 p-6 rounded-lg mb-8" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
               <div className="flex justify-between items-center mb-6">
@@ -780,7 +769,6 @@ export default function EscapeRoomBuilder() {
             </div>
           )}
 
-          {/* Question Form */}
           {isAddingNewQuestion && selectedRoomId && (
             <div className="border-2 p-6 rounded-lg mb-8" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
               <div className="flex justify-between items-center mb-6">
@@ -936,7 +924,6 @@ export default function EscapeRoomBuilder() {
             </div>
           )}
 
-          {/* Escape Rooms List */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-4 flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
               <BooksIcon /> Your Escape Rooms ({escapeRooms.length})
@@ -1022,7 +1009,6 @@ export default function EscapeRoomBuilder() {
                       </div>
                     </div>
 
-                    {/* Questions in this room */}
                     <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
                       <div className="flex justify-between items-center mb-3">
                         <h4 className="font-semibold" style={{ color: 'var(--foreground)' }}>
@@ -1133,7 +1119,6 @@ export default function EscapeRoomBuilder() {
             )}
           </div>
 
-          {/* Export Modal */}
           {showExportModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="max-w-4xl w-full p-6 rounded-lg" style={{ backgroundColor: 'var(--card)' }}>
@@ -1189,7 +1174,6 @@ export default function EscapeRoomBuilder() {
             </div>
           )}
 
-          {/* Back Button */}
           <div className="text-center mt-8">
             <a
               href="/components"

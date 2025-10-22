@@ -1,4 +1,3 @@
-// Custom SVG Icons for Escape Room
 import { CSSProperties } from 'react';
 
 type IconProps = {
