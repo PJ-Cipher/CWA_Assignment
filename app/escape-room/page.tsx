@@ -18,6 +18,7 @@ type EscapeRoom = {
   name: string;
   description: string;
   questions: Question[];
+  timerMinutes: number; // Timer duration in minutes (0 = no timer)
 };
 
 type PreviewState = {
@@ -28,6 +29,8 @@ type PreviewState = {
   showError: boolean;
   attempts: number;
   completed: boolean;
+  timeRemaining: number; // Time remaining in seconds
+  timeFailed: boolean; // Whether the timer ran out
 };
 
 const COOKIE_NAME = 'escape_rooms_data';
@@ -48,7 +51,9 @@ export default function EscapeRoomBuilder() {
     showHint: false,
     showError: false,
     attempts: 0,
-    completed: false
+    completed: false,
+    timeRemaining: 0,
+    timeFailed: false
   });
 
   // Room form state
@@ -56,7 +61,8 @@ export default function EscapeRoomBuilder() {
     id: '',
     name: '',
     description: '',
-    questions: []
+    questions: [],
+    timerMinutes: 0
   });
 
   // Question form state
@@ -96,7 +102,8 @@ export default function EscapeRoomBuilder() {
       id: '',
       name: '',
       description: '',
-      questions: []
+      questions: [],
+      timerMinutes: 0
     });
     setEditingRoom(null);
     setIsAddingNewRoom(false);
@@ -122,7 +129,8 @@ export default function EscapeRoomBuilder() {
       id: Date.now().toString(),
       name: '',
       description: '',
-      questions: []
+      questions: [],
+      timerMinutes: 0
     });
   };
 
@@ -266,6 +274,27 @@ export default function EscapeRoomBuilder() {
     }
   };
 
+  // Timer effect for preview mode
+  useEffect(() => {
+    let timerInterval: NodeJS.Timeout;
+    
+    if (preview.isActive && !preview.completed && !preview.timeFailed && preview.timeRemaining > 0) {
+      timerInterval = setInterval(() => {
+        setPreview(prev => {
+          const newTime = prev.timeRemaining - 1;
+          if (newTime <= 0) {
+            return { ...prev, timeRemaining: 0, timeFailed: true };
+          }
+          return { ...prev, timeRemaining: newTime };
+        });
+      }, 1000);
+    }
+    
+    return () => {
+      if (timerInterval) clearInterval(timerInterval);
+    };
+  }, [preview.isActive, preview.completed, preview.timeFailed, preview.timeRemaining]);
+
   // Preview Mode Functions
   const startPreview = (roomId: string) => {
     const room = escapeRooms.find(r => r.id === roomId);
@@ -281,7 +310,9 @@ export default function EscapeRoomBuilder() {
       showHint: false,
       showError: false,
       attempts: 0,
-      completed: false
+      completed: false,
+      timeRemaining: room.timerMinutes * 60, // Convert minutes to seconds
+      timeFailed: false
     });
   };
 
@@ -323,9 +354,17 @@ export default function EscapeRoomBuilder() {
       showHint: false,
       showError: false,
       attempts: 0,
-      completed: false
+      completed: false,
+      timeRemaining: 0,
+      timeFailed: false
     });
     setPreviewRoomId(null);
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   // Preview Mode Render
@@ -362,7 +401,7 @@ export default function EscapeRoomBuilder() {
               </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className={`grid gap-4 mb-6 ${room.timerMinutes > 0 ? 'grid-cols-4' : 'grid-cols-3'}`}>
               <div className="p-4 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
                 <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Question</div>
                 <div className="text-2xl font-bold">{preview.currentQuestionIndex + 1} / {room.questions.length}</div>
@@ -375,6 +414,23 @@ export default function EscapeRoomBuilder() {
                 <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Progress</div>
                 <div className="text-2xl font-bold">{Math.round(progress)}%</div>
               </div>
+              {room.timerMinutes > 0 && (
+                <div 
+                  className="p-4 rounded-lg text-center border" 
+                  style={{ 
+                    backgroundColor: 'var(--card)', 
+                    borderColor: preview.timeRemaining <= 60 ? '#ef4444' : 'var(--border)'
+                  }}
+                >
+                  <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>⏱️ Time Left</div>
+                  <div 
+                    className="text-2xl font-bold"
+                    style={{ color: preview.timeRemaining <= 60 ? '#ef4444' : 'var(--card-foreground)' }}
+                  >
+                    {formatTime(preview.timeRemaining)}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="mb-4">
@@ -462,6 +518,51 @@ export default function EscapeRoomBuilder() {
     );
   }
 
+  // Time Failed Screen
+  if (preview.timeFailed && previewRoomId) {
+    const room = escapeRooms.find(r => r.id === previewRoomId);
+    if (!room) return null;
+
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="text-8xl mb-6">⏰</div>
+            <h1 className="text-5xl font-bold mb-4" style={{ color: '#ef4444' }}>Time's Up!</h1>
+            <p className="text-xl mb-4" style={{ color: 'var(--muted-foreground)' }}>
+              You ran out of time in "{room.name}"
+            </p>
+            <p className="text-lg mb-8" style={{ color: 'var(--muted-foreground)' }}>
+              You completed {preview.currentQuestionIndex} out of {room.questions.length} questions
+              <br />
+              Total attempts: {preview.attempts}
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => startPreview(room.id)}
+                className="px-8 py-4 rounded-lg font-semibold text-lg"
+                style={{ backgroundColor: '#3b82f6', color: 'white' }}
+              >
+                🔄 Try Again
+              </button>
+              <button
+                onClick={exitPreview}
+                className="px-8 py-4 rounded-lg font-semibold text-lg border"
+                style={{
+                  backgroundColor: 'var(--card)',
+                  borderColor: 'var(--border)',
+                  color: 'var(--foreground)'
+                }}
+              >
+                ← Back to Builder
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (preview.completed && previewRoomId) {
     const room = escapeRooms.find(r => r.id === previewRoomId);
     if (!room) return null;
@@ -477,6 +578,7 @@ export default function EscapeRoomBuilder() {
             </p>
             <p className="text-lg mb-8" style={{ color: 'var(--muted-foreground)' }}>
               Total attempts: {preview.attempts} • Questions: {room.questions.length}
+              {room.timerMinutes > 0 && ` • Time remaining: ${formatTime(preview.timeRemaining)}`}
             </p>
             <button
               onClick={exitPreview}
@@ -598,6 +700,29 @@ export default function EscapeRoomBuilder() {
                       color: 'var(--foreground)'
                     }}
                   />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                    ⏱️ Timer (Minutes)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="120"
+                    value={roomFormData.timerMinutes}
+                    onChange={(e) => setRoomFormData({ ...roomFormData, timerMinutes: parseInt(e.target.value) || 0 })}
+                    placeholder="0 = No timer"
+                    className="w-full px-4 py-2 rounded-lg border"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  />
+                  <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
+                    Set to 0 for no time limit, or enter minutes for a timed challenge
+                  </p>
                 </div>
 
                 <div className="flex gap-4">
@@ -813,9 +938,12 @@ export default function EscapeRoomBuilder() {
                             {room.description}
                           </p>
                         )}
-                        <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-                          📝 {room.questions.length} question{room.questions.length !== 1 ? 's' : ''}
-                        </p>
+                        <div className="flex gap-4 text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                          <p>📝 {room.questions.length} question{room.questions.length !== 1 ? 's' : ''}</p>
+                          {room.timerMinutes > 0 && (
+                            <p>⏱️ {room.timerMinutes} minute{room.timerMinutes !== 1 ? 's' : ''} timer</p>
+                          )}
+                        </div>
                       </div>
 
                       <div className="flex gap-2 ml-4">
