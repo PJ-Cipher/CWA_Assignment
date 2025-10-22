@@ -2,6 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import { cookieUtils } from '../utils/cookies';
+import {
+  PlayIcon,
+  TimerIcon,
+  DeleteIcon,
+  EditIcon,
+  AddIcon,
+  SaveIcon,
+  ExportIcon,
+  HintIcon,
+  UnlockIcon,
+  BackIcon,
+  UpArrowIcon,
+  DownArrowIcon,
+  CloseIcon,
+  RefreshIcon,
+  SuccessIcon,
+  TimeUpIcon,
+  DoorIcon,
+  BooksIcon,
+  NotesIcon,
+  ClipboardIcon,
+  ClearIcon,
+  BuildingIcon
+} from './icons';
 
 type Question = {
   id: string;
@@ -381,8 +405,8 @@ export default function EscapeRoomBuilder() {
           <div className="max-w-4xl mx-auto">
             <div className="mb-6 flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold" style={{ color: 'var(--foreground)' }}>
-                  🎮 Preview: {room.name}
+                <h1 className="text-3xl font-bold flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
+                  <PlayIcon className="w-8 h-8" /> Preview: {room.name}
                 </h1>
                 <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
                   {room.description}
@@ -390,14 +414,14 @@ export default function EscapeRoomBuilder() {
               </div>
               <button
                 onClick={exitPreview}
-                className="px-4 py-2 rounded-lg border transition-colors"
+                className="px-4 py-2 rounded-lg border transition-colors flex items-center gap-2"
                 style={{
                   backgroundColor: 'var(--card)',
                   borderColor: 'var(--border)',
                   color: 'var(--foreground)'
                 }}
               >
-                ✕ Exit Preview
+                <CloseIcon /> Exit Preview
               </button>
             </div>
 
@@ -422,7 +446,9 @@ export default function EscapeRoomBuilder() {
                     borderColor: preview.timeRemaining <= 60 ? '#ef4444' : 'var(--border)'
                   }}
                 >
-                  <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>⏱️ Time Left</div>
+                  <div className="text-sm mb-1 flex items-center justify-center gap-1" style={{ color: 'var(--muted-foreground)' }}>
+                    <TimerIcon className="w-4 h-4" /> Time Left
+                  </div>
                   <div 
                     className="text-2xl font-bold"
                     style={{ color: preview.timeRemaining <= 60 ? '#ef4444' : 'var(--card-foreground)' }}
@@ -477,29 +503,29 @@ export default function EscapeRoomBuilder() {
                 <div className="flex gap-4">
                   <button
                     type="submit"
-                    className="flex-1 px-6 py-3 rounded-lg font-semibold"
+                    className="flex-1 px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2"
                     style={{ backgroundColor: '#3b82f6', color: 'white' }}
                   >
-                    🔓 Submit Answer
+                    <UnlockIcon /> Submit Answer
                   </button>
                   <button
                     type="button"
                     onClick={() => setPreview(prev => ({ ...prev, showHint: !prev.showHint }))}
-                    className="px-6 py-3 rounded-lg font-semibold border"
+                    className="px-6 py-3 rounded-lg font-semibold border flex items-center gap-2"
                     style={{
                       backgroundColor: 'var(--background)',
                       borderColor: 'var(--border)',
                       color: 'var(--foreground)'
                     }}
                   >
-                    💡 Hint
+                    <HintIcon /> Hint
                   </button>
                 </div>
               </form>
 
               {preview.showHint && currentQuestion.hint && (
                 <div className="mt-4 p-4 rounded-lg border-l-4 border-yellow-500" style={{ backgroundColor: 'var(--background)' }}>
-                  <p className="font-semibold mb-2">💡 Hint:</p>
+                  <p className="font-semibold mb-2 flex items-center gap-2"><HintIcon /> Hint:</p>
                   <p style={{ color: 'var(--muted-foreground)' }}>{currentQuestion.hint}</p>
                   {currentQuestion.codeExample && (
                     <div className="mt-3">
@@ -527,7 +553,9 @@ export default function EscapeRoomBuilder() {
       <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="text-8xl mb-6">⏰</div>
+            <div className="flex justify-center mb-6">
+              <TimeUpIcon className="w-32 h-32" style={{ color: '#ef4444' }} />
+            </div>
             <h1 className="text-5xl font-bold mb-4" style={{ color: '#ef4444' }}>Time's Up!</h1>
             <p className="text-xl mb-4" style={{ color: 'var(--muted-foreground)' }}>
               You ran out of time in "{room.name}"
@@ -540,21 +568,21 @@ export default function EscapeRoomBuilder() {
             <div className="flex gap-4 justify-center">
               <button
                 onClick={() => startPreview(room.id)}
-                className="px-8 py-4 rounded-lg font-semibold text-lg"
+                className="px-8 py-4 rounded-lg font-semibold text-lg flex items-center gap-2"
                 style={{ backgroundColor: '#3b82f6', color: 'white' }}
               >
-                🔄 Try Again
+                <RefreshIcon /> Try Again
               </button>
               <button
                 onClick={exitPreview}
-                className="px-8 py-4 rounded-lg font-semibold text-lg border"
+                className="px-8 py-4 rounded-lg font-semibold text-lg border flex items-center gap-2"
                 style={{
                   backgroundColor: 'var(--card)',
                   borderColor: 'var(--border)',
                   color: 'var(--foreground)'
                 }}
               >
-                ← Back to Builder
+                <BackIcon /> Back to Builder
               </button>
             </div>
           </div>
@@ -571,7 +599,9 @@ export default function EscapeRoomBuilder() {
       <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="text-8xl mb-6">🎉</div>
+            <div className="flex justify-center mb-6">
+              <SuccessIcon className="w-32 h-32" style={{ color: '#10b981' }} />
+            </div>
             <h1 className="text-5xl font-bold mb-4">Escape Room Complete!</h1>
             <p className="text-xl mb-4" style={{ color: 'var(--muted-foreground)' }}>
               You've completed "{room.name}"
@@ -582,10 +612,10 @@ export default function EscapeRoomBuilder() {
             </p>
             <button
               onClick={exitPreview}
-              className="px-8 py-4 rounded-lg font-semibold text-lg"
+              className="px-8 py-4 rounded-lg font-semibold text-lg flex items-center gap-2 mx-auto"
               style={{ backgroundColor: '#10b981', color: 'white' }}
             >
-              ← Back to Builder
+              <BackIcon /> Back to Builder
             </button>
           </div>
         </div>
@@ -599,8 +629,8 @@ export default function EscapeRoomBuilder() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
-              🏗️ Escape Room Builder
+            <h1 className="text-4xl font-bold mb-4 flex items-center justify-center gap-3" style={{ color: 'var(--foreground)' }}>
+              <BuildingIcon className="w-10 h-10" /> Escape Room Builder
             </h1>
             <p className="text-xl" style={{ color: 'var(--muted-foreground)' }}>
               Create escape rooms with multiple questions
@@ -611,15 +641,15 @@ export default function EscapeRoomBuilder() {
           <div className="flex flex-wrap gap-4 mb-8 justify-center">
             <button
               onClick={handleAddRoom}
-              className="px-6 py-3 rounded-lg font-semibold transition-colors"
+              className="px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
               style={{ backgroundColor: '#10b981', color: 'white' }}
             >
-              ➕ Create New Escape Room
+              <AddIcon /> Create New Escape Room
             </button>
             <button
               onClick={handleExport}
               disabled={escapeRooms.length === 0}
-              className="px-6 py-3 rounded-lg font-semibold border transition-colors"
+              className="px-6 py-3 rounded-lg font-semibold border transition-colors flex items-center gap-2"
               style={{
                 backgroundColor: 'var(--card)',
                 borderColor: 'var(--border)',
@@ -628,12 +658,12 @@ export default function EscapeRoomBuilder() {
                 cursor: escapeRooms.length === 0 ? 'not-allowed' : 'pointer'
               }}
             >
-              📤 Export All Data
+              <ExportIcon /> Export All Data
             </button>
             <button
               onClick={handleClearAllData}
               disabled={escapeRooms.length === 0}
-              className="px-6 py-3 rounded-lg font-semibold border transition-colors"
+              className="px-6 py-3 rounded-lg font-semibold border transition-colors flex items-center gap-2"
               style={{
                 backgroundColor: '#ef4444',
                 color: 'white',
@@ -641,7 +671,7 @@ export default function EscapeRoomBuilder() {
                 cursor: escapeRooms.length === 0 ? 'not-allowed' : 'pointer'
               }}
             >
-              🗑️ Clear All Data
+              <ClearIcon /> Clear All Data
             </button>
           </div>
 
@@ -649,19 +679,19 @@ export default function EscapeRoomBuilder() {
           {isAddingNewRoom && (
             <div className="border-2 p-6 rounded-lg mb-8" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">
-                  {editingRoom ? '✏️ Edit Escape Room' : '➕ Create New Escape Room'}
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                  {editingRoom ? <><EditIcon /> Edit Escape Room</> : <><AddIcon /> Create New Escape Room</>}
                 </h2>
                 <button
                   onClick={resetRoomForm}
-                  className="px-4 py-2 rounded-lg border"
+                  className="px-4 py-2 rounded-lg border flex items-center gap-2"
                   style={{
                     backgroundColor: 'var(--background)',
                     borderColor: 'var(--border)',
                     color: 'var(--foreground)'
                   }}
                 >
-                  ✕ Cancel
+                  <CloseIcon /> Cancel
                 </button>
               </div>
 
@@ -703,8 +733,8 @@ export default function EscapeRoomBuilder() {
                 </div>
 
                 <div>
-                  <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
-                    ⏱️ Timer (Minutes)
+                  <label className="block mb-2 font-semibold flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
+                    <TimerIcon className="w-5 h-5" /> Timer (Minutes)
                   </label>
                   <input
                     type="number"
@@ -728,10 +758,10 @@ export default function EscapeRoomBuilder() {
                 <div className="flex gap-4">
                   <button
                     type="submit"
-                    className="flex-1 px-6 py-3 rounded-lg font-semibold"
+                    className="flex-1 px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2"
                     style={{ backgroundColor: '#10b981', color: 'white' }}
                   >
-                    {editingRoom ? '💾 Save Changes' : '➕ Create Escape Room'}
+                    {editingRoom ? <><SaveIcon /> Save Changes</> : <><AddIcon /> Create Escape Room</>}
                   </button>
                   <button
                     type="button"
@@ -754,19 +784,19 @@ export default function EscapeRoomBuilder() {
           {isAddingNewQuestion && selectedRoomId && (
             <div className="border-2 p-6 rounded-lg mb-8" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">
-                  {editingQuestion ? '✏️ Edit Question' : '➕ Add New Question'}
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                  {editingQuestion ? <><EditIcon /> Edit Question</> : <><AddIcon /> Add New Question</>}
                 </h2>
                 <button
                   onClick={resetQuestionForm}
-                  className="px-4 py-2 rounded-lg border"
+                  className="px-4 py-2 rounded-lg border flex items-center gap-2"
                   style={{
                     backgroundColor: 'var(--background)',
                     borderColor: 'var(--border)',
                     color: 'var(--foreground)'
                   }}
                 >
-                  ✕ Cancel
+                  <CloseIcon /> Cancel
                 </button>
               </div>
 
@@ -884,10 +914,10 @@ export default function EscapeRoomBuilder() {
                 <div className="flex gap-4">
                   <button
                     type="submit"
-                    className="flex-1 px-6 py-3 rounded-lg font-semibold"
+                    className="flex-1 px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2"
                     style={{ backgroundColor: '#10b981', color: 'white' }}
                   >
-                    {editingQuestion ? '💾 Save Changes' : '➕ Add Question'}
+                    {editingQuestion ? <><SaveIcon /> Save Changes</> : <><AddIcon /> Add Question</>}
                   </button>
                   <button
                     type="button"
@@ -908,13 +938,15 @@ export default function EscapeRoomBuilder() {
 
           {/* Escape Rooms List */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
-              📚 Your Escape Rooms ({escapeRooms.length})
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
+              <BooksIcon /> Your Escape Rooms ({escapeRooms.length})
             </h2>
 
             {escapeRooms.length === 0 ? (
               <div className="border-2 border-dashed p-12 rounded-lg text-center" style={{ borderColor: 'var(--border)' }}>
-                <div className="text-6xl mb-4">🚪</div>
+                <div className="flex justify-center mb-4">
+                  <DoorIcon className="w-24 h-24" style={{ color: 'var(--muted-foreground)' }} />
+                </div>
                 <p className="text-xl mb-2" style={{ color: 'var(--foreground)' }}>No escape rooms yet</p>
                 <p style={{ color: 'var(--muted-foreground)' }}>
                   Click "Create New Escape Room" to get started
@@ -939,9 +971,15 @@ export default function EscapeRoomBuilder() {
                           </p>
                         )}
                         <div className="flex gap-4 text-sm" style={{ color: 'var(--muted-foreground)' }}>
-                          <p>📝 {room.questions.length} question{room.questions.length !== 1 ? 's' : ''}</p>
+                          <p className="flex items-center gap-1">
+                            <NotesIcon className="w-4 h-4" /> 
+                            {room.questions.length} question{room.questions.length !== 1 ? 's' : ''}
+                          </p>
                           {room.timerMinutes > 0 && (
-                            <p>⏱️ {room.timerMinutes} minute{room.timerMinutes !== 1 ? 's' : ''} timer</p>
+                            <p className="flex items-center gap-1">
+                              <TimerIcon className="w-4 h-4" /> 
+                              {room.timerMinutes} minute{room.timerMinutes !== 1 ? 's' : ''} timer
+                            </p>
                           )}
                         </div>
                       </div>
@@ -950,7 +988,7 @@ export default function EscapeRoomBuilder() {
                         <button
                           onClick={() => startPreview(room.id)}
                           disabled={room.questions.length === 0}
-                          className="px-4 py-2 rounded border text-sm"
+                          className="px-4 py-2 rounded border text-sm flex items-center gap-1"
                           style={{
                             backgroundColor: '#3b82f6',
                             color: 'white',
@@ -958,28 +996,28 @@ export default function EscapeRoomBuilder() {
                             cursor: room.questions.length === 0 ? 'not-allowed' : 'pointer'
                           }}
                         >
-                          🎮 Preview
+                          <PlayIcon className="w-4 h-4" /> Preview
                         </button>
                         <button
                           onClick={() => handleEditRoom(room)}
-                          className="px-4 py-2 rounded border text-sm"
+                          className="px-4 py-2 rounded border text-sm flex items-center gap-1"
                           style={{
                             backgroundColor: 'var(--background)',
                             borderColor: 'var(--border)',
                             color: 'var(--foreground)'
                           }}
                         >
-                          ✏️ Edit
+                          <EditIcon className="w-4 h-4" /> Edit
                         </button>
                         <button
                           onClick={() => handleDeleteRoom(room.id)}
-                          className="px-4 py-2 rounded border text-sm"
+                          className="px-3 py-2 rounded border text-sm"
                           style={{
                             backgroundColor: '#ef4444',
                             color: 'white'
                           }}
                         >
-                          🗑️
+                          <DeleteIcon className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -992,10 +1030,10 @@ export default function EscapeRoomBuilder() {
                         </h4>
                         <button
                           onClick={() => handleAddQuestion(room.id)}
-                          className="px-3 py-1 rounded text-sm"
+                          className="px-3 py-1 rounded text-sm flex items-center gap-1"
                           style={{ backgroundColor: '#10b981', color: 'white' }}
                         >
-                          ➕ Add Question
+                          <AddIcon className="w-4 h-4" /> Add Question
                         </button>
                       </div>
 
@@ -1045,7 +1083,7 @@ export default function EscapeRoomBuilder() {
                                         cursor: index === 0 ? 'not-allowed' : 'pointer'
                                       }}
                                     >
-                                      ↑
+                                      <UpArrowIcon />
                                     </button>
                                     <button
                                       onClick={() => handleMoveQuestion(room.id, index, 'down')}
@@ -1059,7 +1097,7 @@ export default function EscapeRoomBuilder() {
                                         cursor: index === room.questions.length - 1 ? 'not-allowed' : 'pointer'
                                       }}
                                     >
-                                      ↓
+                                      <DownArrowIcon />
                                     </button>
                                   </div>
                                   <button
@@ -1070,7 +1108,7 @@ export default function EscapeRoomBuilder() {
                                       color: 'white'
                                     }}
                                   >
-                                    ✏️
+                                    <EditIcon className="w-4 h-4" />
                                   </button>
                                   <button
                                     onClick={() => handleDeleteQuestion(room.id, question.id)}
@@ -1080,7 +1118,7 @@ export default function EscapeRoomBuilder() {
                                       color: 'white'
                                     }}
                                   >
-                                    🗑️
+                                    <DeleteIcon className="w-4 h-4" />
                                   </button>
                                 </div>
                               </div>
@@ -1100,19 +1138,19 @@ export default function EscapeRoomBuilder() {
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="max-w-4xl w-full p-6 rounded-lg" style={{ backgroundColor: 'var(--card)' }}>
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold" style={{ color: 'var(--card-foreground)' }}>
-                    📤 Export All Escape Rooms
+                  <h2 className="text-2xl font-bold flex items-center gap-2" style={{ color: 'var(--card-foreground)' }}>
+                    <ExportIcon /> Export All Escape Rooms
                   </h2>
                   <button
                     onClick={() => setShowExportModal(false)}
-                    className="px-4 py-2 rounded-lg border"
+                    className="px-4 py-2 rounded-lg border flex items-center gap-2"
                     style={{
                       backgroundColor: 'var(--background)',
                       borderColor: 'var(--border)',
                       color: 'var(--foreground)'
                     }}
                   >
-                    ✕ Close
+                    <CloseIcon /> Close
                   </button>
                 </div>
 
@@ -1130,10 +1168,10 @@ export default function EscapeRoomBuilder() {
                 <div className="flex gap-4">
                   <button
                     onClick={handleCopyCode}
-                    className="flex-1 px-6 py-3 rounded-lg font-semibold"
+                    className="flex-1 px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2"
                     style={{ backgroundColor: '#10b981', color: 'white' }}
                   >
-                    📋 Copy to Clipboard
+                    <ClipboardIcon /> Copy to Clipboard
                   </button>
                   <button
                     onClick={() => setShowExportModal(false)}
@@ -1162,7 +1200,7 @@ export default function EscapeRoomBuilder() {
                 color: 'var(--foreground)'
               }}
             >
-              <span>←</span>
+              <BackIcon />
               <span>Back to Components</span>
             </a>
           </div>
