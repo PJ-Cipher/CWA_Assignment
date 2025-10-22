@@ -40,9 +40,12 @@ export default function About() {
               </div>
             </div>
           </div>
-
-          {/* Video Tutorial Section */}
-          <VideoTutorial />
+          
+          <VideoTutorial 
+            videoUrl="https://www.youtube.com/embed/ygFXmlJFlp8"
+            videoTitle="How to Use This Website"
+            videoDescription="Comprehensive guide to navigating and using all features"
+          />
 
           <div className="p-8 rounded-lg shadow-md mb-8 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
             <h2 className="text-2xl font-semibold mb-6" style={{ color: 'var(--card-foreground)' }}>Project Overview</h2>
