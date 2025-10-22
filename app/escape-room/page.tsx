@@ -1,470 +1,1042 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { cookieUtils } from '../utils/cookies';
 
-type Room = {
-  id: number;
+type Question = {
+  id: string;
   name: string;
   description: string;
   challenge: string;
   hint: string;
   answer: string;
-  codeExample?: string;
+  codeExample: string;
 };
 
-const rooms: Room[] = [
-  {
-    id: 1,
-    name: "The Variable Vault",
-    description: "You enter a dimly lit room. On the wall, you see a cryptic message: 'To unlock the door, declare the secret...'",
-    challenge: "What keyword do you use in JavaScript to declare a variable that can be reassigned?",
-    hint: "It rhymes with 'pet' and was introduced in ES6.",
-    answer: "let",
-    codeExample: "let secretKey = 'unlock';"
-  },
-  {
-    id: 2,
-    name: "The Loop Chamber",
-    description: "The door opens to reveal a circular room with mirrors everywhere. A voice echoes: 'Only by repeating the pattern can you escape...'",
-    challenge: "Which loop structure would you use to iterate exactly 5 times? (Type the keyword)",
-    hint: "It's commonly used when you know the exact number of iterations needed.",
-    answer: "for",
-    codeExample: "for (let i = 0; i < 5; i++) { console.log(i); }"
-  },
-  {
-    id: 3,
-    name: "The Conditional Corridor",
-    description: "You find yourself in a hallway with two doors. A sign reads: 'Choose wisely, for only one path is true...'",
-    challenge: "What keyword is used to check a condition in JavaScript?",
-    hint: "It comes before 'else' in conditional statements.",
-    answer: "if",
-    codeExample: "if (door === 'left') { escape(); }"
-  },
-  {
-    id: 4,
-    name: "The Function Fortress",
-    description: "A massive locked gate blocks your path. Inscribed on it: 'To proceed, you must define your purpose...'",
-    challenge: "What keyword is used to declare a function in JavaScript?",
-    hint: "It's the traditional way to create reusable code blocks.",
-    answer: "function",
-    codeExample: "function unlockGate() { return true; }"
-  },
-  {
-    id: 5,
-    name: "The Array Archive",
-    description: "You enter a library with countless scrolls. A riddle appears: 'I hold many, yet I am one. My items are ordered, from zero I've begun...'",
-    challenge: "What data structure holds multiple values in an ordered list? (Hint: starts with 'a')",
-    hint: "It uses square brackets [] and can hold multiple values.",
-    answer: "array",
-    codeExample: "let treasures = ['gold', 'silver', 'bronze'];"
-  },
-  {
-    id: 6,
-    name: "The Object Observatory",
-    description: "The final room! A telescope points to the stars. On the floor: 'Everything is connected. Key and value, paired together...'",
-    challenge: "What data structure stores data in key-value pairs?",
-    hint: "It uses curly braces {} and represents real-world entities.",
-    answer: "object",
-    codeExample: "let exit = { locked: false, key: 'found' };"
-  }
-];
+type EscapeRoom = {
+  id: string;
+  name: string;
+  description: string;
+  questions: Question[];
+};
 
-export default function EscapeRoom() {
-  const [currentRoom, setCurrentRoom] = useState(0);
-  const [userAnswer, setUserAnswer] = useState('');
-  const [showHint, setShowHint] = useState(false);
-  const [attempts, setAttempts] = useState(0);
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [isGameStarted, setIsGameStarted] = useState(false);
-  const [isGameComplete, setIsGameComplete] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const [hintsUsed, setHintsUsed] = useState(0);
+type PreviewState = {
+  isActive: boolean;
+  currentQuestionIndex: number;
+  userAnswer: string;
+  showHint: boolean;
+  showError: boolean;
+  attempts: number;
+  completed: boolean;
+};
 
+const COOKIE_NAME = 'escape_rooms_data';
+
+export default function EscapeRoomBuilder() {
+  const [escapeRooms, setEscapeRooms] = useState<EscapeRoom[]>([]);
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [editingRoom, setEditingRoom] = useState<EscapeRoom | null>(null);
+  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
+  const [isAddingNewRoom, setIsAddingNewRoom] = useState(false);
+  const [isAddingNewQuestion, setIsAddingNewQuestion] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [previewRoomId, setPreviewRoomId] = useState<string | null>(null);
+  const [preview, setPreview] = useState<PreviewState>({
+    isActive: false,
+    currentQuestionIndex: 0,
+    userAnswer: '',
+    showHint: false,
+    showError: false,
+    attempts: 0,
+    completed: false
+  });
+
+  // Room form state
+  const [roomFormData, setRoomFormData] = useState<EscapeRoom>({
+    id: '',
+    name: '',
+    description: '',
+    questions: []
+  });
+
+  // Question form state
+  const [questionFormData, setQuestionFormData] = useState<Question>({
+    id: '',
+    name: '',
+    description: '',
+    challenge: '',
+    hint: '',
+    answer: '',
+    codeExample: ''
+  });
+
+  // Load from cookies on mount
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isGameStarted && !isGameComplete) {
-      timer = setInterval(() => {
-        setTimeElapsed(prev => prev + 1);
-      }, 1000);
+    const savedData = cookieUtils.getCookie(COOKIE_NAME);
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(decodeURIComponent(savedData));
+        setEscapeRooms(parsed);
+      } catch (e) {
+        console.error('Failed to load escape rooms from cookies:', e);
+      }
     }
-    return () => clearInterval(timer);
-  }, [isGameStarted, isGameComplete]);
+  }, []);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  // Save to cookies whenever escapeRooms changes
+  useEffect(() => {
+    if (escapeRooms.length > 0) {
+      const encoded = encodeURIComponent(JSON.stringify(escapeRooms));
+      cookieUtils.setCookie(COOKIE_NAME, encoded, 365);
+    }
+  }, [escapeRooms]);
+
+  const resetRoomForm = () => {
+    setRoomFormData({
+      id: '',
+      name: '',
+      description: '',
+      questions: []
+    });
+    setEditingRoom(null);
+    setIsAddingNewRoom(false);
   };
 
-  const handleStartGame = () => {
-    setIsGameStarted(true);
-    setCurrentRoom(0);
-    setTimeElapsed(0);
-    setAttempts(0);
-    setHintsUsed(0);
-    setIsGameComplete(false);
+  const resetQuestionForm = () => {
+    setQuestionFormData({
+      id: '',
+      name: '',
+      description: '',
+      challenge: '',
+      hint: '',
+      answer: '',
+      codeExample: ''
+    });
+    setEditingQuestion(null);
+    setIsAddingNewQuestion(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleAddRoom = () => {
+    setIsAddingNewRoom(true);
+    setRoomFormData({
+      id: Date.now().toString(),
+      name: '',
+      description: '',
+      questions: []
+    });
+  };
+
+  const handleEditRoom = (room: EscapeRoom) => {
+    setEditingRoom(room);
+    setRoomFormData(room);
+    setIsAddingNewRoom(true);
+  };
+
+  const handleDeleteRoom = (id: string) => {
+    if (confirm('Are you sure you want to delete this escape room and all its questions?')) {
+      setEscapeRooms(escapeRooms.filter(room => room.id !== id));
+      if (selectedRoomId === id) {
+        setSelectedRoomId(null);
+      }
+    }
+  };
+
+  const handleSaveRoom = (e: React.FormEvent) => {
     e.preventDefault();
-    setAttempts(prev => prev + 1);
     
-    if (userAnswer.toLowerCase().trim() === rooms[currentRoom].answer.toLowerCase()) {
-      setShowError(false);
-      setUserAnswer('');
-      setShowHint(false);
+    if (!roomFormData.name) {
+      alert('Please enter a room name.');
+      return;
+    }
+
+    if (editingRoom) {
+      setEscapeRooms(escapeRooms.map(room => 
+        room.id === editingRoom.id ? roomFormData : room
+      ));
+    } else {
+      setEscapeRooms([...escapeRooms, roomFormData]);
+      setSelectedRoomId(roomFormData.id);
+    }
+    
+    resetRoomForm();
+  };
+
+  const handleAddQuestion = (roomId: string) => {
+    setSelectedRoomId(roomId);
+    setIsAddingNewQuestion(true);
+    setQuestionFormData({
+      id: Date.now().toString(),
+      name: '',
+      description: '',
+      challenge: '',
+      hint: '',
+      answer: '',
+      codeExample: ''
+    });
+  };
+
+  const handleEditQuestion = (roomId: string, question: Question) => {
+    setSelectedRoomId(roomId);
+    setEditingQuestion(question);
+    setQuestionFormData(question);
+    setIsAddingNewQuestion(true);
+  };
+
+  const handleDeleteQuestion = (roomId: string, questionId: string) => {
+    if (confirm('Are you sure you want to delete this question?')) {
+      setEscapeRooms(escapeRooms.map(room => {
+        if (room.id === roomId) {
+          return {
+            ...room,
+            questions: room.questions.filter(q => q.id !== questionId)
+          };
+        }
+        return room;
+      }));
+    }
+  };
+
+  const handleSaveQuestion = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!questionFormData.name || !questionFormData.challenge || !questionFormData.answer) {
+      alert('Please fill in at least Name, Challenge, and Answer fields.');
+      return;
+    }
+
+    if (!selectedRoomId) return;
+
+    setEscapeRooms(escapeRooms.map(room => {
+      if (room.id === selectedRoomId) {
+        if (editingQuestion) {
+          return {
+            ...room,
+            questions: room.questions.map(q => 
+              q.id === editingQuestion.id ? questionFormData : q
+            )
+          };
+        } else {
+          return {
+            ...room,
+            questions: [...room.questions, questionFormData]
+          };
+        }
+      }
+      return room;
+    }));
+    
+    resetQuestionForm();
+  };
+
+  const handleMoveQuestion = (roomId: string, questionIndex: number, direction: 'up' | 'down') => {
+    setEscapeRooms(escapeRooms.map(room => {
+      if (room.id === roomId) {
+        const newQuestions = [...room.questions];
+        const newIndex = direction === 'up' ? questionIndex - 1 : questionIndex + 1;
+        
+        if (newIndex >= 0 && newIndex < newQuestions.length) {
+          [newQuestions[questionIndex], newQuestions[newIndex]] = 
+          [newQuestions[newIndex], newQuestions[questionIndex]];
+        }
+        
+        return { ...room, questions: newQuestions };
+      }
+      return room;
+    }));
+  };
+
+  const handleExport = () => {
+    setShowExportModal(true);
+  };
+
+  const getExportCode = () => {
+    return JSON.stringify(escapeRooms, null, 2);
+  };
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(getExportCode());
+    alert('Escape room data copied to clipboard!');
+  };
+
+  const handleClearAllData = () => {
+    if (confirm('Are you sure you want to clear all escape rooms? This cannot be undone!')) {
+      setEscapeRooms([]);
+      cookieUtils.deleteCookie(COOKIE_NAME);
+      setSelectedRoomId(null);
+    }
+  };
+
+  // Preview Mode Functions
+  const startPreview = (roomId: string) => {
+    const room = escapeRooms.find(r => r.id === roomId);
+    if (!room || room.questions.length === 0) {
+      alert('This escape room has no questions to preview!');
+      return;
+    }
+    setPreviewRoomId(roomId);
+    setPreview({
+      isActive: true,
+      currentQuestionIndex: 0,
+      userAnswer: '',
+      showHint: false,
+      showError: false,
+      attempts: 0,
+      completed: false
+    });
+  };
+
+  const handlePreviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const room = escapeRooms.find(r => r.id === previewRoomId);
+    if (!room) return;
+
+    const currentQuestion = room.questions[preview.currentQuestionIndex];
+    
+    setPreview(prev => ({ ...prev, attempts: prev.attempts + 1 }));
+    
+    if (preview.userAnswer.toLowerCase().trim() === currentQuestion.answer.toLowerCase().trim()) {
+      setPreview(prev => ({ ...prev, showError: false, userAnswer: '', showHint: false }));
       
-      if (currentRoom === rooms.length - 1) {
-        setIsGameComplete(true);
+      if (preview.currentQuestionIndex === room.questions.length - 1) {
+        setPreview(prev => ({ ...prev, completed: true }));
       } else {
         setTimeout(() => {
-          setCurrentRoom(prev => prev + 1);
+          setPreview(prev => ({ 
+            ...prev, 
+            currentQuestionIndex: prev.currentQuestionIndex + 1 
+          }));
         }, 500);
       }
     } else {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 2000);
+      setPreview(prev => ({ ...prev, showError: true }));
+      setTimeout(() => {
+        setPreview(prev => ({ ...prev, showError: false }));
+      }, 2000);
     }
   };
 
-  const handleShowHint = () => {
-    setShowHint(true);
-    setHintsUsed(prev => prev + 1);
+  const exitPreview = () => {
+    setPreview({
+      isActive: false,
+      currentQuestionIndex: 0,
+      userAnswer: '',
+      showHint: false,
+      showError: false,
+      attempts: 0,
+      completed: false
+    });
+    setPreviewRoomId(null);
   };
 
-  const getScore = () => {
-    const baseScore = 1000;
-    const timePenalty = Math.floor(timeElapsed / 10) * 5;
-    const attemptPenalty = (attempts - rooms.length) * 10;
-    const hintPenalty = hintsUsed * 50;
-    return Math.max(0, baseScore - timePenalty - attemptPenalty - hintPenalty);
-  };
+  // Preview Mode Render
+  if (preview.isActive && previewRoomId && !preview.completed) {
+    const room = escapeRooms.find(r => r.id === previewRoomId);
+    if (!room) return null;
 
-  if (!isGameStarted) {
+    const currentQuestion = room.questions[preview.currentQuestionIndex];
+    const progress = ((preview.currentQuestionIndex + 1) / room.questions.length) * 100;
+
     return (
       <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-5xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
-                🚪 The Code Escape Room
-              </h1>
-              <p className="text-2xl mb-2" style={{ color: 'var(--muted-foreground)' }}>
-                Interactive Coding Challenge
-              </p>
-            </div>
-
-            <div className="border-2 p-8 rounded-lg mb-8" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-              <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: 'var(--card-foreground)' }}>
-                🔓 Welcome, Brave Coder!
-              </h2>
-              
-              <div className="mb-8 p-6 rounded-lg" style={{ backgroundColor: 'var(--background)' }}>
-                <p className="text-lg leading-relaxed mb-4" style={{ color: 'var(--muted-foreground)' }}>
-                  You wake up in a mysterious digital realm, trapped by an ancient algorithm. 
-                  To escape, you must navigate through <strong>6 chambers</strong>, each guarded by a coding challenge. 
-                  Only by proving your knowledge of programming fundamentals can you unlock each door and find your way to freedom.
-                </p>
-                <p className="text-lg leading-relaxed" style={{ color: 'var(--muted-foreground)' }}>
-                  The clock is ticking... Can you escape before time runs out?
+            <div className="mb-6 flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold" style={{ color: 'var(--foreground)' }}>
+                  🎮 Preview: {room.name}
+                </h1>
+                <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                  {room.description}
                 </p>
               </div>
-
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <div className="p-6 rounded-lg border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
-                    <span>🎯</span> Game Features
-                  </h3>
-                  <ul className="space-y-2" style={{ color: 'var(--muted-foreground)' }}>
-                    <li>• 6 Progressive Challenges</li>
-                    <li>• Real-time Timer</li>
-                    <li>• Hint System</li>
-                    <li>• Score Tracking</li>
-                    <li>• Code Examples</li>
-                  </ul>
-                </div>
-
-                <div className="p-6 rounded-lg border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
-                    <span>📚</span> What You'll Learn
-                  </h3>
-                  <ul className="space-y-2" style={{ color: 'var(--muted-foreground)' }}>
-                    <li>• Variables & Data Types</li>
-                    <li>• Control Structures</li>
-                    <li>• Functions</li>
-                    <li>• Arrays & Objects</li>
-                    <li>• Problem Solving</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="text-center">
-                <button
-                  onClick={handleStartGame}
-                  className="px-8 py-4 text-xl font-bold rounded-lg transition-all transform hover:scale-105 active:scale-95 shadow-lg"
-                  style={{
-                    backgroundColor: '#10b981',
-                    color: 'white',
-                    border: 'none'
-                  }}
-                >
-                  🎮 Start Your Escape!
-                </button>
-              </div>
-            </div>
-
-            <div className="text-center mt-8">
-              <a 
-                href="/components" 
-                className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg transition-colors border"
-                style={{ 
+              <button
+                onClick={exitPreview}
+                className="px-4 py-2 rounded-lg border transition-colors"
+                style={{
                   backgroundColor: 'var(--card)',
                   borderColor: 'var(--border)',
                   color: 'var(--foreground)'
                 }}
               >
-                <span>←</span>
-                <span>Back to Components</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isGameComplete) {
-    const score = getScore();
-    const performance = score > 800 ? 'Outstanding!' : score > 600 ? 'Great Job!' : score > 400 ? 'Good Work!' : 'Nice Try!';
-    
-    return (
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <div className="text-8xl mb-6">🎉</div>
-              <h1 className="text-5xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
-                Congratulations!
-              </h1>
-              <p className="text-2xl mb-8" style={{ color: 'var(--muted-foreground)' }}>
-                You've Successfully Escaped!
-              </p>
+                ✕ Exit Preview
+              </button>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div className="p-6 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-                <div className="text-4xl mb-2">⏱️</div>
-                <div className="text-3xl font-bold mb-2" style={{ color: 'var(--card-foreground)' }}>
-                  {formatTime(timeElapsed)}
-                </div>
-                <div style={{ color: 'var(--muted-foreground)' }}>Time Elapsed</div>
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="p-4 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+                <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Question</div>
+                <div className="text-2xl font-bold">{preview.currentQuestionIndex + 1} / {room.questions.length}</div>
               </div>
-
-              <div className="p-6 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-                <div className="text-4xl mb-2">🎯</div>
-                <div className="text-3xl font-bold mb-2" style={{ color: 'var(--card-foreground)' }}>
-                  {attempts}
-                </div>
-                <div style={{ color: 'var(--muted-foreground)' }}>Total Attempts</div>
+              <div className="p-4 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+                <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Attempts</div>
+                <div className="text-2xl font-bold">{preview.attempts}</div>
               </div>
-
-              <div className="p-6 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-                <div className="text-4xl mb-2">⭐</div>
-                <div className="text-3xl font-bold mb-2" style={{ color: 'var(--card-foreground)' }}>
-                  {score}
-                </div>
-                <div style={{ color: 'var(--muted-foreground)' }}>Final Score</div>
+              <div className="p-4 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+                <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Progress</div>
+                <div className="text-2xl font-bold">{Math.round(progress)}%</div>
               </div>
             </div>
 
-            <div className="p-8 rounded-lg text-center border mb-8" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-              <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--card-foreground)' }}>
-                {performance}
-              </h2>
-              <p className="text-lg mb-6" style={{ color: 'var(--muted-foreground)' }}>
-                You've mastered the basics of JavaScript fundamentals. Keep practicing to become an even better programmer!
-              </p>
+            <div className="mb-4">
+              <div className="w-full h-3 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--border)' }}>
+                <div 
+                  className="h-full transition-all duration-500"
+                  style={{ width: `${progress}%`, backgroundColor: '#10b981' }}
+                />
+              </div>
+            </div>
+
+            <div className="border-2 p-8 rounded-lg" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <h2 className="text-3xl font-bold mb-4">{currentQuestion.name}</h2>
               
-              <div className="space-y-2 mb-6" style={{ color: 'var(--muted-foreground)' }}>
-                <p>🏆 Rooms Completed: {rooms.length}</p>
-                <p>💡 Hints Used: {hintsUsed}</p>
-                <p>🎯 Accuracy: {Math.round((rooms.length / attempts) * 100)}%</p>
+              <div className="mb-6 p-6 rounded-lg" style={{ backgroundColor: 'var(--background)' }}>
+                {currentQuestion.description && (
+                  <p className="text-lg italic mb-4" style={{ color: 'var(--muted-foreground)' }}>
+                    {currentQuestion.description}
+                  </p>
+                )}
+                <div className="border-l-4 pl-4 border-blue-500">
+                  <p className="text-xl font-semibold">{currentQuestion.challenge}</p>
+                </div>
               </div>
 
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={() => {
-                    setIsGameStarted(false);
-                    setIsGameComplete(false);
-                    setCurrentRoom(0);
-                    setUserAnswer('');
-                    setAttempts(0);
-                    setTimeElapsed(0);
-                    setHintsUsed(0);
-                  }}
-                  className="px-6 py-3 rounded-lg font-semibold transition-colors"
-                  style={{
-                    backgroundColor: '#10b981',
-                    color: 'white'
-                  }}
-                >
-                  🔄 Play Again
-                </button>
-                
-                <a
-                  href="/components"
-                  className="px-6 py-3 rounded-lg font-semibold transition-colors border"
-                  style={{
-                    backgroundColor: 'var(--background)',
-                    borderColor: 'var(--border)',
-                    color: 'var(--foreground)'
-                  }}
-                >
-                  🏠 Back to Home
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const room = rooms[currentRoom];
-  const progress = ((currentRoom + 1) / rooms.length) * 100;
-
-  return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Header Stats */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="p-4 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-              <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Room</div>
-              <div className="text-2xl font-bold" style={{ color: 'var(--card-foreground)' }}>
-                {currentRoom + 1} / {rooms.length}
-              </div>
-            </div>
-            
-            <div className="p-4 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-              <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Time</div>
-              <div className="text-2xl font-bold" style={{ color: 'var(--card-foreground)' }}>
-                {formatTime(timeElapsed)}
-              </div>
-            </div>
-            
-            <div className="p-4 rounded-lg text-center border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-              <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Attempts</div>
-              <div className="text-2xl font-bold" style={{ color: 'var(--card-foreground)' }}>
-                {attempts}
-              </div>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="w-full h-3 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--border)' }}>
-              <div 
-                className="h-full transition-all duration-500"
-                style={{ 
-                  width: `${progress}%`,
-                  backgroundColor: '#10b981'
-                }}
-              />
-            </div>
-            <p className="text-center mt-2 text-sm" style={{ color: 'var(--muted-foreground)' }}>
-              Progress: {Math.round(progress)}%
-            </p>
-          </div>
-
-          {/* Room Content */}
-          <div className="border-2 p-8 rounded-lg mb-6" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-            <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--card-foreground)' }}>
-              {room.name}
-            </h2>
-            
-            <div className="mb-6 p-6 rounded-lg" style={{ backgroundColor: 'var(--background)' }}>
-              <p className="text-lg italic mb-4" style={{ color: 'var(--muted-foreground)' }}>
-                {room.description}
-              </p>
-              
-              <div className="border-l-4 pl-4 border-blue-500">
-                <p className="text-xl font-semibold" style={{ color: 'var(--foreground)' }}>
-                  {room.challenge}
-                </p>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="mb-4">
-              <div className="mb-4">
+              <form onSubmit={handlePreviewSubmit} className="mb-4">
                 <input
                   type="text"
-                  value={userAnswer}
-                  onChange={(e) => setUserAnswer(e.target.value)}
+                  value={preview.userAnswer}
+                  onChange={(e) => setPreview(prev => ({ ...prev, userAnswer: e.target.value }))}
                   placeholder="Type your answer here..."
-                  className="w-full px-4 py-3 rounded-lg border-2 text-lg transition-colors"
+                  className="w-full px-4 py-3 rounded-lg border-2 mb-4"
                   style={{
                     backgroundColor: 'var(--background)',
-                    borderColor: showError ? '#ef4444' : 'var(--border)',
+                    borderColor: preview.showError ? '#ef4444' : 'var(--border)',
                     color: 'var(--foreground)'
                   }}
                   autoFocus
                 />
-                {showError && (
-                  <p className="text-red-500 mt-2 text-sm">
-                    ❌ Incorrect answer. Try again!
-                  </p>
+                {preview.showError && (
+                  <p className="text-red-500 mb-4">❌ Incorrect answer. Try again!</p>
                 )}
-              </div>
 
-              <div className="flex gap-4">
+                <div className="flex gap-4">
+                  <button
+                    type="submit"
+                    className="flex-1 px-6 py-3 rounded-lg font-semibold"
+                    style={{ backgroundColor: '#3b82f6', color: 'white' }}
+                  >
+                    🔓 Submit Answer
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPreview(prev => ({ ...prev, showHint: !prev.showHint }))}
+                    className="px-6 py-3 rounded-lg font-semibold border"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  >
+                    💡 Hint
+                  </button>
+                </div>
+              </form>
+
+              {preview.showHint && currentQuestion.hint && (
+                <div className="mt-4 p-4 rounded-lg border-l-4 border-yellow-500" style={{ backgroundColor: 'var(--background)' }}>
+                  <p className="font-semibold mb-2">💡 Hint:</p>
+                  <p style={{ color: 'var(--muted-foreground)' }}>{currentQuestion.hint}</p>
+                  {currentQuestion.codeExample && (
+                    <div className="mt-3">
+                      <p className="text-sm mb-2" style={{ color: 'var(--muted-foreground)' }}>Example:</p>
+                      <code className="block p-3 rounded font-mono text-sm" style={{ backgroundColor: '#1e1e1e', color: '#d4d4d4' }}>
+                        {currentQuestion.codeExample}
+                      </code>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (preview.completed && previewRoomId) {
+    const room = escapeRooms.find(r => r.id === previewRoomId);
+    if (!room) return null;
+
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="text-8xl mb-6">🎉</div>
+            <h1 className="text-5xl font-bold mb-4">Escape Room Complete!</h1>
+            <p className="text-xl mb-4" style={{ color: 'var(--muted-foreground)' }}>
+              You've completed "{room.name}"
+            </p>
+            <p className="text-lg mb-8" style={{ color: 'var(--muted-foreground)' }}>
+              Total attempts: {preview.attempts} • Questions: {room.questions.length}
+            </p>
+            <button
+              onClick={exitPreview}
+              className="px-8 py-4 rounded-lg font-semibold text-lg"
+              style={{ backgroundColor: '#10b981', color: 'white' }}
+            >
+              ← Back to Builder
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
+              🏗️ Escape Room Builder
+            </h1>
+            <p className="text-xl" style={{ color: 'var(--muted-foreground)' }}>
+              Create escape rooms with multiple questions
+            </p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-4 mb-8 justify-center">
+            <button
+              onClick={handleAddRoom}
+              className="px-6 py-3 rounded-lg font-semibold transition-colors"
+              style={{ backgroundColor: '#10b981', color: 'white' }}
+            >
+              ➕ Create New Escape Room
+            </button>
+            <button
+              onClick={handleExport}
+              disabled={escapeRooms.length === 0}
+              className="px-6 py-3 rounded-lg font-semibold border transition-colors"
+              style={{
+                backgroundColor: 'var(--card)',
+                borderColor: 'var(--border)',
+                color: 'var(--foreground)',
+                opacity: escapeRooms.length === 0 ? 0.5 : 1,
+                cursor: escapeRooms.length === 0 ? 'not-allowed' : 'pointer'
+              }}
+            >
+              📤 Export All Data
+            </button>
+            <button
+              onClick={handleClearAllData}
+              disabled={escapeRooms.length === 0}
+              className="px-6 py-3 rounded-lg font-semibold border transition-colors"
+              style={{
+                backgroundColor: '#ef4444',
+                color: 'white',
+                opacity: escapeRooms.length === 0 ? 0.5 : 1,
+                cursor: escapeRooms.length === 0 ? 'not-allowed' : 'pointer'
+              }}
+            >
+              🗑️ Clear All Data
+            </button>
+          </div>
+
+          {/* Room Form */}
+          {isAddingNewRoom && (
+            <div className="border-2 p-6 rounded-lg mb-8" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">
+                  {editingRoom ? '✏️ Edit Escape Room' : '➕ Create New Escape Room'}
+                </h2>
                 <button
-                  type="submit"
-                  className="flex-1 px-6 py-3 rounded-lg font-semibold transition-colors"
-                  style={{
-                    backgroundColor: '#3b82f6',
-                    color: 'white'
-                  }}
-                >
-                  🔓 Submit Answer
-                </button>
-                
-                <button
-                  type="button"
-                  onClick={handleShowHint}
-                  className="px-6 py-3 rounded-lg font-semibold transition-colors border"
+                  onClick={resetRoomForm}
+                  className="px-4 py-2 rounded-lg border"
                   style={{
                     backgroundColor: 'var(--background)',
                     borderColor: 'var(--border)',
                     color: 'var(--foreground)'
                   }}
                 >
-                  💡 Hint
+                  ✕ Cancel
                 </button>
               </div>
-            </form>
 
-            {showHint && (
-              <div className="mt-4 p-4 rounded-lg border-l-4 border-yellow-500" style={{ backgroundColor: 'var(--background)' }}>
-                <p className="font-semibold mb-2" style={{ color: 'var(--foreground)' }}>💡 Hint:</p>
-                <p style={{ color: 'var(--muted-foreground)' }}>{room.hint}</p>
-                {room.codeExample && (
-                  <div className="mt-3">
-                    <p className="text-sm mb-2" style={{ color: 'var(--muted-foreground)' }}>Example:</p>
-                    <code className="block p-3 rounded font-mono text-sm" style={{ backgroundColor: '#1e1e1e', color: '#d4d4d4' }}>
-                      {room.codeExample}
-                    </code>
+              <form onSubmit={handleSaveRoom} className="space-y-4">
+                <div>
+                  <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                    Escape Room Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={roomFormData.name}
+                    onChange={(e) => setRoomFormData({ ...roomFormData, name: e.target.value })}
+                    placeholder="e.g., JavaScript Fundamentals Challenge"
+                    className="w-full px-4 py-2 rounded-lg border"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                    Description
+                  </label>
+                  <textarea
+                    value={roomFormData.description}
+                    onChange={(e) => setRoomFormData({ ...roomFormData, description: e.target.value })}
+                    placeholder="Describe the overall theme of this escape room..."
+                    className="w-full px-4 py-2 rounded-lg border min-h-24"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  />
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    type="submit"
+                    className="flex-1 px-6 py-3 rounded-lg font-semibold"
+                    style={{ backgroundColor: '#10b981', color: 'white' }}
+                  >
+                    {editingRoom ? '💾 Save Changes' : '➕ Create Escape Room'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resetRoomForm}
+                    className="px-6 py-3 rounded-lg font-semibold border"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Question Form */}
+          {isAddingNewQuestion && selectedRoomId && (
+            <div className="border-2 p-6 rounded-lg mb-8" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">
+                  {editingQuestion ? '✏️ Edit Question' : '➕ Add New Question'}
+                </h2>
+                <button
+                  onClick={resetQuestionForm}
+                  className="px-4 py-2 rounded-lg border"
+                  style={{
+                    backgroundColor: 'var(--background)',
+                    borderColor: 'var(--border)',
+                    color: 'var(--foreground)'
+                  }}
+                >
+                  ✕ Cancel
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveQuestion} className="space-y-4">
+                <div>
+                  <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                    Question Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={questionFormData.name}
+                    onChange={(e) => setQuestionFormData({ ...questionFormData, name: e.target.value })}
+                    placeholder="e.g., The Variable Vault"
+                    className="w-full px-4 py-2 rounded-lg border"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                    Description
+                  </label>
+                  <textarea
+                    value={questionFormData.description}
+                    onChange={(e) => setQuestionFormData({ ...questionFormData, description: e.target.value })}
+                    placeholder="Set the scene for this challenge..."
+                    className="w-full px-4 py-2 rounded-lg border min-h-24"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                    Challenge Question *
+                  </label>
+                  <textarea
+                    value={questionFormData.challenge}
+                    onChange={(e) => setQuestionFormData({ ...questionFormData, challenge: e.target.value })}
+                    placeholder="What question must the player answer?"
+                    className="w-full px-4 py-2 rounded-lg border min-h-24"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                    required
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                      Answer *
+                    </label>
+                    <input
+                      type="text"
+                      value={questionFormData.answer}
+                      onChange={(e) => setQuestionFormData({ ...questionFormData, answer: e.target.value })}
+                      placeholder="Correct answer (case-insensitive)"
+                      className="w-full px-4 py-2 rounded-lg border"
+                      style={{
+                        backgroundColor: 'var(--background)',
+                        borderColor: 'var(--border)',
+                        color: 'var(--foreground)'
+                      }}
+                      required
+                    />
                   </div>
-                )}
+
+                  <div>
+                    <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                      Hint
+                    </label>
+                    <input
+                      type="text"
+                      value={questionFormData.hint}
+                      onChange={(e) => setQuestionFormData({ ...questionFormData, hint: e.target.value })}
+                      placeholder="Optional hint for players"
+                      className="w-full px-4 py-2 rounded-lg border"
+                      style={{
+                        backgroundColor: 'var(--background)',
+                        borderColor: 'var(--border)',
+                        color: 'var(--foreground)'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-semibold" style={{ color: 'var(--foreground)' }}>
+                    Code Example (Optional)
+                  </label>
+                  <textarea
+                    value={questionFormData.codeExample}
+                    onChange={(e) => setQuestionFormData({ ...questionFormData, codeExample: e.target.value })}
+                    placeholder="Optional code example..."
+                    className="w-full px-4 py-2 rounded-lg border font-mono text-sm min-h-20"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  />
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    type="submit"
+                    className="flex-1 px-6 py-3 rounded-lg font-semibold"
+                    style={{ backgroundColor: '#10b981', color: 'white' }}
+                  >
+                    {editingQuestion ? '💾 Save Changes' : '➕ Add Question'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resetQuestionForm}
+                    className="px-6 py-3 rounded-lg font-semibold border"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Escape Rooms List */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
+              📚 Your Escape Rooms ({escapeRooms.length})
+            </h2>
+
+            {escapeRooms.length === 0 ? (
+              <div className="border-2 border-dashed p-12 rounded-lg text-center" style={{ borderColor: 'var(--border)' }}>
+                <div className="text-6xl mb-4">🚪</div>
+                <p className="text-xl mb-2" style={{ color: 'var(--foreground)' }}>No escape rooms yet</p>
+                <p style={{ color: 'var(--muted-foreground)' }}>
+                  Click "Create New Escape Room" to get started
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {escapeRooms.map((room) => (
+                  <div
+                    key={room.id}
+                    className="border-2 p-6 rounded-lg"
+                    style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--card-foreground)' }}>
+                          {room.name}
+                        </h3>
+                        {room.description && (
+                          <p className="mb-3 italic" style={{ color: 'var(--muted-foreground)' }}>
+                            {room.description}
+                          </p>
+                        )}
+                        <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                          📝 {room.questions.length} question{room.questions.length !== 1 ? 's' : ''}
+                        </p>
+                      </div>
+
+                      <div className="flex gap-2 ml-4">
+                        <button
+                          onClick={() => startPreview(room.id)}
+                          disabled={room.questions.length === 0}
+                          className="px-4 py-2 rounded border text-sm"
+                          style={{
+                            backgroundColor: '#3b82f6',
+                            color: 'white',
+                            opacity: room.questions.length === 0 ? 0.5 : 1,
+                            cursor: room.questions.length === 0 ? 'not-allowed' : 'pointer'
+                          }}
+                        >
+                          🎮 Preview
+                        </button>
+                        <button
+                          onClick={() => handleEditRoom(room)}
+                          className="px-4 py-2 rounded border text-sm"
+                          style={{
+                            backgroundColor: 'var(--background)',
+                            borderColor: 'var(--border)',
+                            color: 'var(--foreground)'
+                          }}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteRoom(room.id)}
+                          className="px-4 py-2 rounded border text-sm"
+                          style={{
+                            backgroundColor: '#ef4444',
+                            color: 'white'
+                          }}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Questions in this room */}
+                    <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
+                      <div className="flex justify-between items-center mb-3">
+                        <h4 className="font-semibold" style={{ color: 'var(--foreground)' }}>
+                          Questions:
+                        </h4>
+                        <button
+                          onClick={() => handleAddQuestion(room.id)}
+                          className="px-3 py-1 rounded text-sm"
+                          style={{ backgroundColor: '#10b981', color: 'white' }}
+                        >
+                          ➕ Add Question
+                        </button>
+                      </div>
+
+                      {room.questions.length === 0 ? (
+                        <p className="text-sm italic" style={{ color: 'var(--muted-foreground)' }}>
+                          No questions yet. Click "Add Question" to create one.
+                        </p>
+                      ) : (
+                        <div className="space-y-3">
+                          {room.questions.map((question, index) => (
+                            <div
+                              key={question.id}
+                              className="p-4 rounded-lg border"
+                              style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}
+                            >
+                              <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span className="font-bold" style={{ color: 'var(--muted-foreground)' }}>
+                                      #{index + 1}
+                                    </span>
+                                    <span className="font-semibold" style={{ color: 'var(--foreground)' }}>
+                                      {question.name}
+                                    </span>
+                                  </div>
+                                  <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>
+                                    {question.challenge}
+                                  </p>
+                                  <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                                    Answer: <code className="px-2 py-1 rounded" style={{ backgroundColor: 'var(--card)' }}>
+                                      {question.answer}
+                                    </code>
+                                  </p>
+                                </div>
+
+                                <div className="flex gap-2 ml-4">
+                                  <div className="flex flex-col gap-1">
+                                    <button
+                                      onClick={() => handleMoveQuestion(room.id, index, 'up')}
+                                      disabled={index === 0}
+                                      className="px-2 py-1 rounded border text-xs"
+                                      style={{
+                                        backgroundColor: 'var(--card)',
+                                        borderColor: 'var(--border)',
+                                        color: 'var(--foreground)',
+                                        opacity: index === 0 ? 0.5 : 1,
+                                        cursor: index === 0 ? 'not-allowed' : 'pointer'
+                                      }}
+                                    >
+                                      ↑
+                                    </button>
+                                    <button
+                                      onClick={() => handleMoveQuestion(room.id, index, 'down')}
+                                      disabled={index === room.questions.length - 1}
+                                      className="px-2 py-1 rounded border text-xs"
+                                      style={{
+                                        backgroundColor: 'var(--card)',
+                                        borderColor: 'var(--border)',
+                                        color: 'var(--foreground)',
+                                        opacity: index === room.questions.length - 1 ? 0.5 : 1,
+                                        cursor: index === room.questions.length - 1 ? 'not-allowed' : 'pointer'
+                                      }}
+                                    >
+                                      ↓
+                                    </button>
+                                  </div>
+                                  <button
+                                    onClick={() => handleEditQuestion(room.id, question)}
+                                    className="px-3 py-1 rounded border text-sm"
+                                    style={{
+                                      backgroundColor: '#3b82f6',
+                                      color: 'white'
+                                    }}
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteQuestion(room.id, question.id)}
+                                    className="px-3 py-1 rounded border text-sm"
+                                    style={{
+                                      backgroundColor: '#ef4444',
+                                      color: 'white'
+                                    }}
+                                  >
+                                    🗑️
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
 
-          {/* Room Navigation Info */}
-          <div className="text-center p-4 rounded-lg border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-            <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-              🚪 {rooms.length - currentRoom - 1} rooms remaining until escape
-            </p>
+          {/* Export Modal */}
+          {showExportModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="max-w-4xl w-full p-6 rounded-lg" style={{ backgroundColor: 'var(--card)' }}>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold" style={{ color: 'var(--card-foreground)' }}>
+                    📤 Export All Escape Rooms
+                  </h2>
+                  <button
+                    onClick={() => setShowExportModal(false)}
+                    className="px-4 py-2 rounded-lg border"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  >
+                    ✕ Close
+                  </button>
+                </div>
+
+                <p className="mb-4" style={{ color: 'var(--muted-foreground)' }}>
+                  Copy this JSON data to save or share your escape rooms:
+                </p>
+
+                <pre
+                  className="p-4 rounded-lg overflow-auto max-h-96 mb-4 text-sm"
+                  style={{ backgroundColor: '#1e1e1e', color: '#d4d4d4' }}
+                >
+                  {getExportCode()}
+                </pre>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleCopyCode}
+                    className="flex-1 px-6 py-3 rounded-lg font-semibold"
+                    style={{ backgroundColor: '#10b981', color: 'white' }}
+                  >
+                    📋 Copy to Clipboard
+                  </button>
+                  <button
+                    onClick={() => setShowExportModal(false)}
+                    className="px-6 py-3 rounded-lg font-semibold border"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--foreground)'
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Back Button */}
+          <div className="text-center mt-8">
+            <a
+              href="/components"
+              className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg transition-colors border"
+              style={{
+                backgroundColor: 'var(--card)',
+                borderColor: 'var(--border)',
+                color: 'var(--foreground)'
+              }}
+            >
+              <span>←</span>
+              <span>Back to Components</span>
+            </a>
           </div>
         </div>
       </div>
