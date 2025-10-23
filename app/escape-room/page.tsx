@@ -42,7 +42,7 @@ type EscapeRoom = {
   name: string;
   description: string;
   questions: Question[];
-  timerMinutes: number; // Timer duration in minutes (0 = no timer)
+  timerMinutes: number;
 };
 
 type PreviewState = {
@@ -68,6 +68,9 @@ export default function EscapeRoomBuilder() {
   const [isAddingNewQuestion, setIsAddingNewQuestion] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [previewRoomId, setPreviewRoomId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
   const [preview, setPreview] = useState<PreviewState>({
     isActive: false,
     currentQuestionIndex: 0,
@@ -141,6 +144,35 @@ export default function EscapeRoomBuilder() {
     });
     setEditingQuestion(null);
     setIsAddingNewQuestion(false);
+  };
+
+  const handleSaveToDatabase = async () => {
+    setLoading(true);
+    setError(null);
+    setSaveStatus(null);
+
+    try {
+      // For now, we'll save the escape room data as JSON to localStorage
+      // This demonstrates the save functionality while we work on the API
+      const escapeRoomData = {
+        escapeRooms: escapeRooms,
+        savedAt: new Date().toISOString(),
+        version: '1.0'
+      };
+
+      localStorage.setItem('escape_rooms_backup', JSON.stringify(escapeRoomData));
+      
+      // Also save to cookies as backup
+      const encoded = encodeURIComponent(JSON.stringify(escapeRoomData));
+      cookieUtils.setCookie('escape_rooms_backup', encoded, 365);
+
+      setSaveStatus('Successfully saved escape room data! Data is now backed up locally.');
+    } catch (err) {
+      setError('Failed to save escape room data: ' + (err as Error).message);
+      console.error('Failed to save escape room data:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddRoom = () => {
@@ -628,6 +660,39 @@ export default function EscapeRoomBuilder() {
             </p>
           </div>
 
+          {error && (
+            <div className="mb-6 p-4 rounded-lg border" style={{ backgroundColor: '#fef2f2', borderColor: '#fecaca', color: '#dc2626' }}>
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
+                  <span className="text-white text-xs">!</span>
+                </div>
+                <span className="font-semibold">Error:</span>
+                <span>{error}</span>
+              </div>
+            </div>
+          )}
+
+          {loading && (
+            <div className="mb-6 p-4 rounded-lg border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span style={{ color: 'var(--foreground)' }}>Loading...</span>
+              </div>
+            </div>
+          )}
+
+          {saveStatus && (
+            <div className="mb-6 p-4 rounded-lg border" style={{ backgroundColor: '#f0fdf4', borderColor: '#bbf7d0', color: '#166534' }}>
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                  <span className="text-white text-xs">✓</span>
+                </div>
+                <span className="font-semibold">Success:</span>
+                <span>{saveStatus}</span>
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-4 mb-8 justify-center">
             <button
               onClick={handleAddRoom}
@@ -662,6 +727,19 @@ export default function EscapeRoomBuilder() {
               }}
             >
               <ClearIcon /> Clear All Data
+            </button>
+            <button
+              onClick={handleSaveToDatabase}
+              disabled={escapeRooms.length === 0 || loading}
+              className="px-6 py-3 rounded-lg font-semibold border transition-colors flex items-center gap-2"
+              style={{
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                opacity: escapeRooms.length === 0 || loading ? 0.5 : 1,
+                cursor: escapeRooms.length === 0 || loading ? 'not-allowed' : 'pointer'
+              }}
+            >
+              <SaveIcon /> {loading ? 'Saving...' : 'Save to Database'}
             </button>
           </div>
 
