@@ -7,12 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model GameSession {
-  id         Int      @id @default(autoincrement())
-  player     String
-  stage      Int      @default(1)
-  score      Int      @default(0)
-  completed  Boolean  @default(false)
-  createdAt  DateTime @default(now())
+model Puzzle {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String
+  timeLimitSeconds Int?
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
-
