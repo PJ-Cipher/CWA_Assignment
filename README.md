@@ -5,7 +5,7 @@ A comprehensive Next.js web application designed to create and export interactiv
 ## Student Information
 - **Student Name:** Pasan Jayarathna
 - **Student Number:** 21963056
-- **Course:** CSE5006 - Web Application Development
+- **Course:** CSE3CWA - Cloud Web-Based Application
 - **Institution:** La Trobe University (LTU)
 - **Assignment:** Assignment 2 - MOODLE LMS Components with Database Integration
 
@@ -400,7 +400,7 @@ For questions about this project, please refer to your course instructor or teac
 
 ---
 
-**Last Updated:** January 2025
+**Last Updated:** October 2025
 **Version:** 2.0.0
 **Status:** Production Ready with Database Integration
 
@@ -417,7 +417,7 @@ For questions about this project, please refer to your course instructor or teac
 - ✅ Implemented Zod validation for API endpoints
 - ✅ Enhanced project structure and documentation
 
-### Version 1.0.0 (December 2024)
+### Version 1.0.0 (August 2024)
 - ✅ Initial release with tab component generator
 - ✅ Theme switching functionality
 - ✅ HTML5 code export
