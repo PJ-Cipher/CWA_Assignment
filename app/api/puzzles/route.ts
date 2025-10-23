@@ -2,13 +2,10 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { puzzleCreateSchema } from "./validators";
 
-// GET /api/puzzles  (list)
-export async function GET() {
+export async function GET(_req: Request) {
   const puzzles = await prisma.puzzle.findMany({ orderBy: { id: "asc" } });
   return NextResponse.json(puzzles);
 }
-
-// POST /api/puzzles  (create)
 export async function POST(req: Request) {
   const body = await req.json();
   const parsed = puzzleCreateSchema.safeParse(body);

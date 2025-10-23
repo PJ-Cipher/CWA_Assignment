@@ -6,7 +6,7 @@ test.beforeEach(async () => { await resetDb(); });
 
 
 test('PUT /api/puzzles/:id then DELETE /api/puzzles/:id', async ({ request, baseURL }) => {
-// First create an item to test with
+  // Set up test data
 const create = await request.post(`${baseURL}/api/puzzles`, {
   data: { title: 'Test Puzzle', description: 'Test Description', timeLimitSeconds: 60 }
 });

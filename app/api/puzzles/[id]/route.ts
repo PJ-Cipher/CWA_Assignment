@@ -7,7 +7,6 @@ function parseId(params: { id?: string }) {
   return Number.isInteger(id) && id > 0 ? id : null;
 }
 
-// GET /api/puzzles/:id
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: idString } = await params;
   const id = parseId({ id: idString });
@@ -17,7 +16,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   return NextResponse.json(puzzle);
 }
 
-// PUT /api/puzzles/:id
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: idString } = await params;
   const id = parseId({ id: idString });
@@ -35,7 +33,6 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   }
 }
 
-// DELETE /api/puzzles/:id
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: idString } = await params;
   const id = parseId({ id: idString });
