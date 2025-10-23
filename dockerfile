@@ -1,32 +1,22 @@
-# ---- Base builder ----
-    FROM node:20-alpine AS builder
+# --- Base image ---
+    FROM node:20-alpine
+
+    # Set working directory
     WORKDIR /app
     
-    # Install dependencies
+    # Copy dependency files first (for caching)
     COPY package*.json ./
-    RUN npm ci
     
-    # Copy rest of the project
+    # Install all dependencies (including devDependencies)
+    RUN npm install
+    
+    # Copy all project files
     COPY . .
     
     # Build the Next.js app
     RUN npm run build
     
-    # Remove dev dependencies to shrink image
-    RUN npm prune --omit=dev
-    
-    # ---- Runner ----
-    FROM node:20-alpine AS runner
-    WORKDIR /app
-    ENV NODE_ENV=production
-    ENV NEXT_TELEMETRY_DISABLED=1
-    ENV PORT=3000
-    
-    # Copy build output and needed files
-    COPY --from=builder /app/.next ./.next
-    COPY --from=builder /app/public ./public
-    COPY --from=builder /app/package*.json ./
-    
+    # Expose port 3000
     EXPOSE 3000
     
     # Start the app

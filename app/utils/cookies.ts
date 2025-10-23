@@ -39,7 +39,7 @@ export const cookieUtils = {
       const hasCookie = document.cookie.indexOf("testcookie=") !== -1;
       document.cookie = "testcookie=1; expires=Thu, 01 Jan 1970 00:00:00 UTC";
       return hasCookie;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -52,7 +52,7 @@ export const storageUtils = {
     
     try {
       localStorage.setItem(key, value);
-    } catch (e) {
+    } catch {
       console.warn('LocalStorage not available, falling back to cookies');
       cookieUtils.setCookie(key, value);
     }
@@ -63,7 +63,7 @@ export const storageUtils = {
     
     try {
       return localStorage.getItem(key);
-    } catch (e) {
+    } catch {
       return cookieUtils.getCookie(key);
     }
   },
@@ -73,7 +73,7 @@ export const storageUtils = {
     
     try {
       localStorage.removeItem(key);
-    } catch (e) {
+    } catch {
       cookieUtils.deleteCookie(key);
     }
   }

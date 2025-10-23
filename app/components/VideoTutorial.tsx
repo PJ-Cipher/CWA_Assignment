@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 
 interface VideoTutorialProps {
   videoUrl?: string;
@@ -13,7 +13,6 @@ export default function VideoTutorial({
   videoTitle = "How to Use This Website", 
   videoDescription = "Comprehensive guide to navigating and using all features"
 }: VideoTutorialProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
 
   // If no video URL is provided, show placeholder
   if (!videoUrl) {
@@ -54,7 +53,7 @@ export default function VideoTutorial({
           {/* Video Description */}
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-md font-medium text-gray-900 dark:text-white mb-3">What You'll Learn:</h4>
+              <h4 className="text-md font-medium text-gray-900 dark:text-white mb-3">What You&apos;ll Learn:</h4>
               <ul className="space-y-2 text-gray-600 dark:text-gray-300 text-sm">
                 <li>• Navigating the website structure</li>
                 <li>• Using the component library</li>
@@ -105,7 +104,7 @@ export default function VideoTutorial({
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                onLoad={() => setIsPlaying(true)}
+                onLoad={() => {}}
               />
             </div>
           </div>

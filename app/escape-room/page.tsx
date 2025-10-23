@@ -548,9 +548,9 @@ export default function EscapeRoomBuilder() {
             <div className="flex justify-center mb-6">
               <TimeUpIcon className="w-32 h-32" style={{ color: '#ef4444' }} />
             </div>
-            <h1 className="text-5xl font-bold mb-4" style={{ color: '#ef4444' }}>Time's Up!</h1>
+            <h1 className="text-5xl font-bold mb-4" style={{ color: '#ef4444' }}>Time&apos;s Up!</h1>
             <p className="text-xl mb-4" style={{ color: 'var(--muted-foreground)' }}>
-              You ran out of time in "{room.name}"
+              You ran out of time in &quot;{room.name}&quot;
             </p>
             <p className="text-lg mb-8" style={{ color: 'var(--muted-foreground)' }}>
               You completed {preview.currentQuestionIndex} out of {room.questions.length} questions
@@ -596,7 +596,7 @@ export default function EscapeRoomBuilder() {
             </div>
             <h1 className="text-5xl font-bold mb-4">Escape Room Complete!</h1>
             <p className="text-xl mb-4" style={{ color: 'var(--muted-foreground)' }}>
-              You've completed "{room.name}"
+              You&apos;ve completed &quot;{room.name}&quot;
             </p>
             <p className="text-lg mb-8" style={{ color: 'var(--muted-foreground)' }}>
               Total attempts: {preview.attempts} • Questions: {room.questions.length}
@@ -936,7 +936,7 @@ export default function EscapeRoomBuilder() {
                 </div>
                 <p className="text-xl mb-2" style={{ color: 'var(--foreground)' }}>No escape rooms yet</p>
                 <p style={{ color: 'var(--muted-foreground)' }}>
-                  Click "Create New Escape Room" to get started
+                  Click &quot;Create New Escape Room&quot; to get started
                 </p>
               </div>
             ) : (
@@ -1025,7 +1025,7 @@ export default function EscapeRoomBuilder() {
 
                       {room.questions.length === 0 ? (
                         <p className="text-sm italic" style={{ color: 'var(--muted-foreground)' }}>
-                          No questions yet. Click "Add Question" to create one.
+                          No questions yet. Click &quot;Add Question&quot; to create one.
                         </p>
                       ) : (
                         <div className="space-y-3">
