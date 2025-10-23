@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: escape-room-app:latest
+    container_name: escape-room-app
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: "production"
+      NEXT_TELEMETRY_DISABLED: "1"
+      PORT: "3000"
+    restart: unless-stopped
