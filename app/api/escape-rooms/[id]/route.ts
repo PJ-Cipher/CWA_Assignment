@@ -37,7 +37,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       }
     });
     return NextResponse.json(updated);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Escape room not found" }, { status: 404 });
   }
 }
@@ -53,7 +53,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
       }
     });
     return NextResponse.json(deleted);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Escape room not found" }, { status: 404 });
   }
 }

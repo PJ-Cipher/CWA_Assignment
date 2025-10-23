@@ -3,12 +3,12 @@ import { prisma } from "@/lib/prisma";
 import { questionUpdateSchema } from "../../../validators";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string; questionId: string }> }) {
-  const { id, questionId } = await params;
+  const { id: _id, questionId } = await params;
   
   const question = await prisma.question.findFirst({
     where: { 
       id: questionId,
-      escapeRoomId: id
+      escapeRoomId: _id
     }
   });
   
@@ -20,7 +20,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
 }
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string; questionId: string }> }) {
-  const { id, questionId } = await params;
+  const { questionId } = await params;
   const body = await req.json();
   
   const parsed = questionUpdateSchema.safeParse(body);
@@ -35,20 +35,20 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       data: parsed.data
     });
     return NextResponse.json(updated);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Question not found" }, { status: 404 });
   }
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string; questionId: string }> }) {
-  const { id, questionId } = await params;
+  const { questionId } = await params;
   
   try {
     const deleted = await prisma.question.delete({
       where: { id: questionId }
     });
     return NextResponse.json(deleted);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Question not found" }, { status: 404 });
   }
 }

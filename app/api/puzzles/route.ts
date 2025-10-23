@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { puzzleCreateSchema } from "./validators";
 
-export async function GET(_req: Request) {
-  const puzzles = await (prisma as any).puzzle.findMany({ orderBy: { id: "asc" } });
+// Type assertion for Prisma client to avoid TypeScript issues
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const prismaClient = prisma as any;
+
+export async function GET() {
+  const puzzles = await prismaClient.puzzle.findMany({ orderBy: { id: "asc" } });
   return NextResponse.json(puzzles);
 }
 export async function POST(req: Request) {
@@ -12,6 +16,6 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
-  const created = await (prisma as any).puzzle.create({ data: parsed.data });
+  const created = await prismaClient.puzzle.create({ data: parsed.data });
   return NextResponse.json(created, { status: 201 });
 }
