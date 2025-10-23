@@ -406,7 +406,7 @@ For questions about this project, please refer to your course instructor or teac
 
 ## Changelog
 
-### Version 2.0.0 (January 2025)
+### Version 2.0.0 (October 2025)
 - ✅ Added Escape Room Builder with full CRUD operations
 - ✅ Integrated SQLite database with Prisma ORM
 - ✅ Implemented RESTful API endpoints
@@ -417,7 +417,7 @@ For questions about this project, please refer to your course instructor or teac
 - ✅ Implemented Zod validation for API endpoints
 - ✅ Enhanced project structure and documentation
 
-### Version 1.0.0 (August 2024)
+### Version 1.0.0 (August 2025)
 - ✅ Initial release with tab component generator
 - ✅ Theme switching functionality
 - ✅ HTML5 code export
